@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from task_manager.models import Position, TaskType
+from task_manager.models import Position, TaskType, Project
 
 
 class PositionModelTest(TestCase):
@@ -29,3 +29,11 @@ class WorkerModelTest(TestCase):
             str(worker),
             f"{worker.first_name} {worker.last_name}"
         )
+
+
+class ProjectModelTest(TestCase):
+    def test_project_str(self):
+        project = Project.objects.create(
+            name="NewClient website"
+        )
+        self.assertEqual(str(project), project.name)
