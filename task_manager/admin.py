@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 
 from task_manager.models import Position, TaskType, Project, Task, Worker
+
+admin.site.unregister(Group)
 
 admin.site.register(Position)
 
