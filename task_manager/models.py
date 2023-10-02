@@ -43,7 +43,12 @@ class Worker(AbstractUser):
 class Project(models.Model):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    assignees = models.ManyToManyField(Worker, related_name="projects")
+    author = models.ForeignKey(
+        Worker,
+        on_delete=models.PROTECT,
+        related_name="created_projects"
+    )
+    assignees = models.ManyToManyField(Worker, related_name="all_projects")
     description = models.TextField(blank=True)
 
     def __str__(self):
