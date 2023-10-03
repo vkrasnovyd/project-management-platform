@@ -49,7 +49,7 @@ class Project(models.Model):
         related_name="created_projects"
     )
     assignees = models.ManyToManyField(Worker, related_name="all_projects")
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
