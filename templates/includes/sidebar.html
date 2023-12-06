@@ -1,6 +1,13 @@
 <ul class="sidebar-nav">
-  <li><a href="#">Home page</a></li>
+  {% if user.is_authenticated %}
+    <li>{{ user.first_name }} {{ user.last_name }}</li>
+    <li><a href="{% url 'task_manager:worker-detail' pk=user.id %}">My account</a></li>
+    <li><a href="{% url 'logout' %}">Logout</a></li>
+  {% else %}
+    <li><a href="{% url 'login' %}">Login</a></li>
+  {% endif %}
+  <li><a href="{% url 'task_manager:index' %}">Home page</a></li>
   <li><a href="#">Projects</a></li>
   <li><a href="#">Tasks</a></li>
-  <li><a href="#">Users</a></li>
+  <li><a href="{% url 'task_manager:worker-list' %}">Workers</a></li>
 </ul>

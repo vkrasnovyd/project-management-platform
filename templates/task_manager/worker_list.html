@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - Workers</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Workers</h1>
+
+  {% if user.is_staff %}
+    <a href="#" class="btn btn-success">Add new user</a>
+  {% endif %}
+
+  {% regroup worker_list by position as regrouped_worker_list %}
+
+  <ul>
+  {% for item in regrouped_worker_list %}
+      <li>{{ item.grouper }}
+      <ul>
+        {% for worker in item.list %}
+          <li>
+            <a href="{% url 'task_manager:worker-detail' pk=worker.id %}">
+              {{ worker.first_name }} {{ worker.last_name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+      </li>
+  {% endfor %}
+  </ul>
+
+{% endblock %}
