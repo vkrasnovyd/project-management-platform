@@ -8,7 +8,7 @@
   <h1>Workers</h1>
 
   {% if user.is_staff %}
-    <a href="#" class="btn btn-success">Add new user</a>
+    <a href="{% url 'task_manager:worker-create' %}" class="btn btn-success">Add new user</a>
   {% endif %}
 
   {% regroup worker_list by position as regrouped_worker_list %}

@@ -39,3 +39,11 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
         ).order_by("deadline")
         context["common_tasks_in_progress"] = common_tasks_in_progress
         return context
+
+
+class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
+    """View class for the page for creating a new user."""
+
+    model = get_user_model()
+    form_class = WorkerCreationForm
+    template_name = "task_manager/worker_creation_form.html"
