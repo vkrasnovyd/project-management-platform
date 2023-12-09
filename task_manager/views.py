@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views import generic
 
-from task_manager.forms import WorkerCreationForm
+from task_manager.forms import WorkerCreationForm, WorkerChangeForm
 from task_manager.models import Task
 
 
@@ -47,3 +47,11 @@ class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
     model = get_user_model()
     form_class = WorkerCreationForm
     template_name = "task_manager/worker_creation_form.html"
+
+
+class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """View class for the page for updating user info."""
+
+    model = get_user_model()
+    form_class = WorkerChangeForm
+    template_name = "task_manager/worker_update_form.html"

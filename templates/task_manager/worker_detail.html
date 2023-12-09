@@ -8,9 +8,12 @@
 
   <h1>{{ worker }}</h1>
 
+  {% if worker == user or user.is_staff %}
+    <a href="{% url 'task_manager:worker-update' pk=worker.id %}" class="btn btn-secondary">Change profile</a>
+  {% endif %}
+
   {% if worker == user %}
-    <a href="#" class="btn btn-secondary">Change profile</a>
-    <a href="#" class="btn btn-secondary">Change password</a>
+    <a href="{% url 'password_change' %}" class="btn btn-secondary">Change password</a>
   {% endif %}
 
   {% if user.is_staff and not worker == user %}
