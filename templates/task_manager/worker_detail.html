@@ -17,7 +17,16 @@
   {% endif %}
 
   {% if user.is_staff and not worker == user %}
-    <a href="#" class="btn btn-danger">Delete profile</a>
+    {% if worker.is_active %}
+      <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-danger link-to-page">
+        Deactivate user profile
+      </a>
+    {% else %}
+      <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-success link-to-page">
+        Re-activate user profile
+      </a>
+      <a href="#" class="btn btn-danger">Delete profile</a>
+    {% endif %}
   {% endif %}
 
   <p>

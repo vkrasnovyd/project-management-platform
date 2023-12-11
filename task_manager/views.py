@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 
 from task_manager.forms import WorkerCreationForm, WorkerChangeForm
@@ -55,3 +57,14 @@ class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
     form_class = WorkerChangeForm
     template_name = "task_manager/worker_update_form.html"
+
+
+@login_required
+def toggle_is_active(request, pk):
+    user = get_user_model().objects.get(id=pk)
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
+    user.save()
+    return HttpResponseRedirect(reverse_lazy("task_manager:worker-detail", args=[pk]))
