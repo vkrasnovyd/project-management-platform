@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from task_manager.forms import WorkerCreationForm, WorkerChangeForm
-from task_manager.models import Task
+from task_manager.models import Task, Project
 
 
 @login_required
@@ -40,6 +40,20 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
             is_completed=False
         ).order_by("deadline")
         context["common_tasks_in_progress"] = common_tasks_in_progress
+
+        """
+        Code below checks dependencies, that can block the possibility to delete user.
+        'Delete' button in the Detail view will be visible only if User doesn't have such blocking dependencies.
+        """
+
+        context["can_be_deleted"] = False
+        if (
+                not Project.objects.all().filter(author=responsible) and
+                not Task.objects.all().filter(author=responsible) and
+                not Task.objects.all().filter(responsible=responsible)
+        ):
+            context["can_be_deleted"] = True
+
         return context
 
 
@@ -57,6 +71,13 @@ class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
     form_class = WorkerChangeForm
     template_name = "task_manager/worker_update_form.html"
+
+
+class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
+    """View class for the page for deleting user info from the DB."""
+
+    model = get_user_model()
+    success_url = reverse_lazy("task_manager:worker-list")
 
 
 @login_required

@@ -18,14 +18,13 @@
 
   {% if user.is_staff and not worker == user %}
     {% if worker.is_active %}
-      <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-danger link-to-page">
+      <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-warning link-to-page">
         Deactivate user profile
       </a>
     {% else %}
       <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-success link-to-page">
         Re-activate user profile
       </a>
-      <a href="#" class="btn btn-danger">Delete profile</a>
     {% endif %}
   {% endif %}
 
@@ -33,10 +32,17 @@
     <b>Position:</b> {{ worker.position.name }}
   </p>
 
+  {% if can_be_deleted %}
+    <p>This user isn't an author or responsible in any project or task and can be safely deleted.</p>
+    <a href="{% url 'task_manager:worker-delete' pk=worker.id %}" class="btn btn-danger">Delete profile</a>
+  {% endif %}
+
   {% if worker != user %}
     <h2>Tasks in progress</h2>
+
     {% if common_tasks_in_progress.count %}
       <p>This user has {{ common_tasks_in_progress.count }} active tasks created by you:</p>
+
       {% for task in common_tasks_in_progress %}
         <hr>
         <h3><a href="#">{{ task.name }}</a></h3>
@@ -44,6 +50,7 @@
         <p>{{ task.status }}</p>
         <p><b>Due to:</b> {{ task.deadline }}</p>
       {% endfor %}
+
     {% else %}
       <p>This user doesn't have uncompleted tasks created by you.</p>
     {% endif %}
