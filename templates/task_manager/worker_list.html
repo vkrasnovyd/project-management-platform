@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Workers</h1>
-
-  {% if user.is_staff %}
-    <a href="{% url 'task_manager:worker-create' %}" class="btn btn-success">Add new user</a>
-  {% endif %}
+  <h1>
+    Workers
+    {% if user.is_staff %}
+      <a href="{% url 'task_manager:worker-create' %}" class="btn btn-outline-primary">+</a>
+    {% endif %}
+  </h1>
 
   {% regroup worker_list by position as regrouped_worker_list %}
 
