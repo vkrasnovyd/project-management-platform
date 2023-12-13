@@ -1,13 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
 from task_manager.forms import WorkerCreationForm, WorkerChangeForm
-from task_manager.models import Task, Project
+from task_manager.models import Task, Project, Position
 
 
 @login_required
@@ -89,3 +90,14 @@ def toggle_is_active(request, pk):
         user.is_active = True
     user.save()
     return HttpResponseRedirect(reverse_lazy("task_manager:worker-detail", args=[pk]))
+
+
+class PositionListView(LoginRequiredMixin, generic.ListView):
+    """
+    View class for the page with a list of all positions
+    with links to the pages for creating, updating and deleting positions.
+    """
+
+    model = Position
+    paginate_by = 20
+    queryset = Position.objects.annotate(num_workers=Count("workers"))

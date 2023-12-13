@@ -8,6 +8,7 @@ from task_manager.views import (
     WorkerUpdateView,
     toggle_is_active,
     WorkerDeleteView,
+    PositionListView,
 )
 
 urlpatterns = [
@@ -22,6 +23,7 @@ urlpatterns = [
         name="toggle-is-active",
     ),
     path("workers/<int:pk>/delete/", WorkerDeleteView.as_view(), name="worker-delete"),
+    path("positions/", PositionListView.as_view(), name="position-list"),
 ]
 
 app_name = "task_manager"
