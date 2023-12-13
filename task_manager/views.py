@@ -109,3 +109,11 @@ class PositionCreateView(LoginRequiredMixin, generic.CreateView):
     model = Position
     form_class = PositionForm
     success_url = reverse_lazy("task_manager:position-list")
+
+
+class PositionUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """View class for the page for updating existing positions."""
+
+    model = Position
+    form_class = PositionForm
+    success_url = reverse_lazy("task_manager:position-list")

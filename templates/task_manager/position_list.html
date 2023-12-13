@@ -26,7 +26,7 @@
         <td>{{ position.id }}</td>
         <td>{{ position.name }}</td>
         <td>{{ position.num_workers }}</td>
-        <td><a href="#" class="btn btn-success">Change</a></td>
+        <td><a href="{% url 'task_manager:position-update' pk=position.id %}" class="btn btn-success">Change</a></td>
         <td>
           {% if position.num_workers %}
             <div class="btn btn-secondary">Delete</div>
