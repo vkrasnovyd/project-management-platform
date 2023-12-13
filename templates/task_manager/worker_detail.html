@@ -34,7 +34,7 @@
 
   {% if can_be_deleted %}
     <p>This user isn't an author or responsible in any project or task and can be safely deleted.</p>
-    <a href="{% url 'task_manager:worker-delete' pk=worker.id %}" class="btn btn-danger">Delete profile</a>
+    <a href="{% url 'task_manager:worker-delete' pk=worker.id %}?next={% url 'task_manager:worker-detail' pk=worker.id %}" class="btn btn-danger">Delete profile</a>
   {% endif %}
 
   {% if worker != user %}
