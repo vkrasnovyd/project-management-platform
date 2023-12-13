@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django import forms
 
-from task_manager.models import Worker
+from task_manager.models import Worker, Position
 
 
 class WorkerCreationForm(UserCreationForm):
@@ -23,3 +24,9 @@ class WorkerChangeForm(UserChangeForm):
             "last_name",
             "email"
         )
+
+
+class PositionForm(forms.ModelForm):
+    class Meta:
+        model = Position
+        fields = "__all__"

@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from task_manager.forms import WorkerCreationForm, WorkerChangeForm
+from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm
 from task_manager.models import Task, Project, Position
 
 
@@ -101,3 +101,11 @@ class PositionListView(LoginRequiredMixin, generic.ListView):
     model = Position
     paginate_by = 20
     queryset = Position.objects.annotate(num_workers=Count("workers"))
+
+
+class PositionCreateView(LoginRequiredMixin, generic.CreateView):
+    """View class for the page for creating a new position."""
+
+    model = Position
+    form_class = PositionForm
+    success_url = reverse_lazy("task_manager:position-list")
