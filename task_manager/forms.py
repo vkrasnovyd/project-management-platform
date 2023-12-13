@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from task_manager.models import Worker, Position
+from task_manager.models import Worker, Position, TaskType
 
 
 class WorkerCreationForm(UserCreationForm):
@@ -29,4 +29,10 @@ class WorkerChangeForm(UserChangeForm):
 class PositionForm(forms.ModelForm):
     class Meta:
         model = Position
+        fields = "__all__"
+
+
+class TaskTypeForm(forms.ModelForm):
+    class Meta:
+        model = TaskType
         fields = "__all__"
