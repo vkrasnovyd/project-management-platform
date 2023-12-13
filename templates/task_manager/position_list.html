@@ -31,7 +31,7 @@
           {% if position.num_workers %}
             <div class="btn btn-secondary">Delete</div>
           {% else %}
-            <a href="#" class="btn btn-danger">Delete</a>
+            <a href="{% url 'task_manager:position-delete' pk=position.id %}?next={% url 'task_manager:position-list' %}" class="btn btn-danger">Delete</a>
           {% endif %}
         </td>
       </tr>

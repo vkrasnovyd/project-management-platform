@@ -117,3 +117,10 @@ class PositionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Position
     form_class = PositionForm
     success_url = reverse_lazy("task_manager:position-list")
+
+
+class PositionDeleteView(LoginRequiredMixin, generic.DeleteView):
+    """View class for the page for deleting user info from the DB."""
+
+    model = Position
+    success_url = reverse_lazy("task_manager:position-list")
