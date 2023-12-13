@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - Task types</title>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    Task types
+    {% if user.is_staff %}
+      <a href="#" class="btn btn-outline-primary">+</a>
+    {% endif %}
+  </h1>
+
+  {% if tasktype_list %}
+    <table class="table">
+      <tr>
+        <th>№</th>
+        <th>Task type</th>
+        <th>Change task type</th>
+        <th>Delete task type</th>
+      </tr>
+    {% for task_type in tasktype_list %}
+      <tr>
+        <td>{{ task_type.id }}</td>
+        <td>{{ task_type.name }}</td>
+        <td><a href="#" class="btn btn-success">Change</a></td>
+        <td><a href="#" class="btn btn-danger">Delete</a></td>
+      </tr>
+    {% endfor %}
+  {% endif %}
+
+{% endblock %}

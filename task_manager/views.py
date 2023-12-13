@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm
-from task_manager.models import Task, Project, Position
+from task_manager.models import Task, Project, Position, TaskType
 
 
 @login_required
@@ -124,3 +124,14 @@ class PositionDeleteView(LoginRequiredMixin, generic.DeleteView):
 
     model = Position
     success_url = reverse_lazy("task_manager:position-list")
+
+
+class TaskTypeListView(LoginRequiredMixin, generic.ListView):
+    """
+    View class for the page with a list of all task types
+    with links to the pages for creating, updating and deleting positions.
+    """
+
+    model = TaskType
+    paginate_by = 10
+    template_name = "task_manager/task_type_list.html"
