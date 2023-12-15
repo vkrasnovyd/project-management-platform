@@ -24,7 +24,7 @@
       <tr>
         <td>{{ task_type.id }}</td>
         <td>{{ task_type.name }}</td>
-        <td><a href="#" class="btn btn-success">Change</a></td>
+        <td><a href="{% url 'task_manager:task-type-update' pk=task_type.id %}" class="btn btn-success">Change</a></td>
         <td><a href="#" class="btn btn-danger">Delete</a></td>
       </tr>
     {% endfor %}

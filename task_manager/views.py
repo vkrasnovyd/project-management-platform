@@ -144,3 +144,12 @@ class TaskTypeCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = TaskTypeForm
     template_name = "task_manager/task_type_form.html"
     success_url = reverse_lazy("task_manager:task-type-list")
+
+
+class TaskTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """View class for the page for updating existing task type."""
+
+    model = TaskType
+    form_class = TaskTypeForm
+    template_name = "task_manager/task_type_form.html"
+    success_url = reverse_lazy("task_manager:task-type-list")
