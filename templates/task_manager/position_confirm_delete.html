@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
+{% block title %}
+  <title>Task manager - Delete '{{ position.name }}'</title>
+{% endblock %}
+
 {% block content %}
   <h1>Delete position?</h1>
-  <p>Are you sure that you want to delete this position from the database?</p>
+  <p>Are you sure that you want to delete position '{{ position.name }}' from the database?</p>
   <form action="" method="post">
     {% csrf_token %}
 
