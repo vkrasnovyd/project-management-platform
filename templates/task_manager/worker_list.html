@@ -8,7 +8,7 @@
   <h1>
     Workers
     {% if user.is_staff %}
-      <a href="{% url 'task_manager:worker-create' %}" class="btn btn-outline-primary">+</a>
+      <a href="{% url 'task_manager:worker-create' %}?next={% url 'task_manager:worker-list' %}" class="btn btn-outline-primary">+</a>
     {% endif %}
   </h1>
 

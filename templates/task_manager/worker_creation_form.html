@@ -11,5 +11,6 @@
     {{ form.as_p }}
 
     <input type="submit" value="Submit">
+    <a href="{{ request.GET.next }}" class="btn btn-light">Cancel</a>
   </form>
 {% endblock %}

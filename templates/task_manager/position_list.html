@@ -8,7 +8,7 @@
   <h1>
     Positions
     {% if user.is_staff %}
-      <a href="{% url 'task_manager:position-create' %}" class="btn btn-outline-primary">+</a>
+      <a href="{% url 'task_manager:position-create' %}?next={% url 'task_manager:position-list' %}" class="btn btn-outline-primary">+</a>
     {% endif %}
   </h1>
 
@@ -26,7 +26,7 @@
         <td>{{ position.id }}</td>
         <td>{{ position.name }}</td>
         <td>{{ position.num_workers }}</td>
-        <td><a href="{% url 'task_manager:position-update' pk=position.id %}" class="btn btn-success">Change</a></td>
+        <td><a href="{% url 'task_manager:position-update' pk=position.id %}?next={% url 'task_manager:position-list' %}" class="btn btn-success">Change</a></td>
         <td>
           {% if position.num_workers %}
             <div class="btn btn-secondary">Delete</div>
