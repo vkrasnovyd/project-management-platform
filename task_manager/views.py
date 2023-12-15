@@ -153,3 +153,11 @@ class TaskTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = TaskTypeForm
     template_name = "task_manager/task_type_form.html"
     success_url = reverse_lazy("task_manager:task-type-list")
+
+
+class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
+    """View class for the page for deleting user info from the DB."""
+
+    model = TaskType
+    template_name = "task_manager/task_type_confirm_delete.html"
+    success_url = reverse_lazy("task_manager:task-type-list")

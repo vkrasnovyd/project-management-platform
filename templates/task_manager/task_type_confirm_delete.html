@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - Delete '{{ tasktype.name }}'</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Delete task type?</h1>
+  <p>Are you sure that you want to delete task type '{{ tasktype.name }}' from the database?</p>
+  <form action="" method="post">
+    {% csrf_token %}
+
+    <input type="submit" value="Yes" class="btn btn-danger">
+    <a href="{{ request.GET.next }}" class="btn btn-light">Cancel</a>
+  </form>
+{% endblock %}
