@@ -63,7 +63,8 @@ class TaskModelTest(TestCase):
         )
         task_type = TaskType.objects.create(name="Copywriting")
         project = Project.objects.create(
-            name="NewClient website"
+            name="NewClient website",
+            author=project_manager
         )
 
         task = Task.objects.create(
