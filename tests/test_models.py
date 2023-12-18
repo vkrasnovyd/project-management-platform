@@ -31,8 +31,14 @@ class WorkerModelTest(TestCase):
 
 class ProjectModelTest(TestCase):
     def test_project_str(self):
+        worker = get_user_model().objects.create(
+            first_name="John",
+            last_name="Doe",
+            password="Test1234"
+        )
         project = Project.objects.create(
-            name="NewClient website"
+            name="NewClient website",
+            author=worker
         )
         self.assertEqual(str(project), project.name)
 
