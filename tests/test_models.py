@@ -18,12 +18,10 @@ class TaskTypeModelTest(TestCase):
 
 class WorkerModelTest(TestCase):
     def test_worker_str(self):
-        position = Position.objects.create(name="Python Developer")
         worker = get_user_model().objects.create(
             first_name="John",
             last_name="Doe",
-            password="Test1234",
-            position=position
+            password="Test1234"
         )
         self.assertEqual(
             str(worker),
