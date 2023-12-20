@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - My Projects</title>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    My projects
+    <a href="#" class="btn btn-outline-primary">+</a>
+  </h1>
+
+  {% for project in project_list %}
+    <a href="#">{{ project }}</a>
+    {% if project.is_active %}
+      <div class="badge badge-pill badge-success">Active</div>
+    {% else %}
+      <div class="badge badge-pill badge-secondary">Archived</div>
+    {% endif %}
+    <p>{{ project.num_completed_tasks }} of {{ project.num_tasks }} completed tasks</p>
+    <progress id="project_progress" max="100" value="{{ project.progress }}"></progress>
+    <hr>
+  {% endfor %}
+
+{% endblock %}

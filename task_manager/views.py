@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
+from django.db.models import Count, F, Q, Case, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -161,3 +161,25 @@ class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = TaskType
     template_name = "task_manager/task_type_confirm_delete.html"
     success_url = reverse_lazy("task_manager:task-type-list")
+
+
+class ProjectListView(LoginRequiredMixin, generic.ListView):
+    """View class for the page with a list of all projects assigned to the logged-in user."""
+
+    model = Project
+    paginate_by = 20
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset().filter(assignees=user).prefetch_related(
+            "assignees", "tasks", "tasks__responsible"
+        ).select_related("author").annotate(
+            num_tasks=Count("tasks", filter=Q(tasks__followers=user)),
+            num_completed_tasks=Count("tasks", filter=Q(tasks__is_completed=True, tasks__followers=user)),
+            progress=Case(
+                When(num_tasks__gt=0, then=F("num_completed_tasks") * 100 / F("num_tasks")),
+                default=0
+            )
+        )
+        return queryset
+
