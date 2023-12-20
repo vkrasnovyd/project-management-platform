@@ -181,9 +181,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = super().get_queryset().filter(assignees=user).prefetch_related(
-            "assignees", "tasks", "tasks__responsible"
-        ).select_related("author").annotate(
+        queryset = super().get_queryset().filter(assignees=user).annotate(
             num_tasks=Count("tasks", filter=Q(tasks__followers=user)),
             num_completed_tasks=Count("tasks", filter=Q(tasks__is_completed=True, tasks__followers=user)),
             progress=Case(
