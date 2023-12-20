@@ -9,6 +9,11 @@
     My projects
     <a href="#" class="btn btn-outline-primary">+</a>
   </h1>
+  
+  <form action="" method="get">
+    {{ filterset.form.as_p }}
+    <input type="submit">
+  </form>
 
   {% for project in project_list %}
     <a href="#">{{ project }}</a>

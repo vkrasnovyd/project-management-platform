@@ -1,3 +1,4 @@
+import django_filters
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -163,11 +164,20 @@ class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("task_manager:task-type-list")
 
 
+class ProjectFilterSet(django_filters.FilterSet):
+    is_active = django_filters.BooleanFilter()
+
+    class Meta:
+        model = Project
+        fields = ["is_active"]
+
+
 class ProjectListView(LoginRequiredMixin, generic.ListView):
     """View class for the page with a list of all projects assigned to the logged-in user."""
 
     model = Project
-    paginate_by = 20
+    paginate_by = 10
+    filterset_class = ProjectFilterSet
 
     def get_queryset(self):
         user = self.request.user
@@ -181,5 +191,10 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
                 default=0
             )
         )
-        return queryset
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.distinct()
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filterset"] = self.filterset
+        return context
