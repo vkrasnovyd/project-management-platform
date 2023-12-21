@@ -5,10 +5,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q, Case, When
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm
+from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm, ProjectForm
 from task_manager.models import Task, Project, Position, TaskType
 
 
@@ -207,3 +207,24 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
         project_id = context.get("project").id
         context["participants"] = get_user_model().objects.filter(all_projects=project_id).select_related("position")
         return context
+
+
+class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
+    """View class for the page for creating a new project."""
+
+    model = Project
+    form_class = ProjectForm
+
+    def form_valid(self, form):
+        author = self.request.user
+        name = form.cleaned_data["name"]
+        description = form.cleaned_data["description"]
+
+        project = Project.objects.create(name=name, description=description, author=author)
+        project.save()
+
+        assignees = form.cleaned_data["assignees"]
+        for assignee in assignees:
+            project.assignees.add(assignee)
+        project.assignees.add(author)
+        return HttpResponseRedirect(reverse("task_manager:project-detail", args=[project.id]))

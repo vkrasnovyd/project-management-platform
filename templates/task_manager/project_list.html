@@ -7,7 +7,7 @@
 {% block content %}
   <h1>
     My projects
-    <a href="#" class="btn btn-outline-primary">+</a>
+    <a href="{% url 'task_manager:project-create' %}?next={% url 'task_manager:project-list' %}" class="btn btn-outline-primary">+</a>
   </h1>
   
   <form action="" method="get">
