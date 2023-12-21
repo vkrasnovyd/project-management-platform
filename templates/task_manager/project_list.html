@@ -16,7 +16,7 @@
   </form>
 
   {% for project in project_list %}
-    <a href="#">{{ project }}</a>
+    <a href="{% url 'task_manager:project-detail' pk=project.id %}">{{ project }}</a>
     {% if project.is_active %}
       <div class="badge badge-pill badge-success">Active</div>
     {% else %}

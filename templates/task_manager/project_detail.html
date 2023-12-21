@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - {{ project.name }}</title>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {{ project.name}}
+    <a href="#" class="btn btn-outline-primary">Change</a>
+  </h1>
+
+  {% if project.description %}
+    <p>{{ project.description }}</p>
+  {% endif %}
+
+  <h2>Author</h2>
+  <p>{{ project.author }}</p>
+
+  <h2>Participants</h2>
+
+  {% regroup participants by position as regrouped_worker_list %}
+
+  <ul>
+    {% for position in regrouped_worker_list %}
+      <li>
+        {{ position.grouper }}
+        <ul>
+          {% for worker in position.list %}
+            <li>{{ worker.first_name }} {{ worker.last_name }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

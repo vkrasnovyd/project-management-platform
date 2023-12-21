@@ -196,3 +196,14 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context["filterset"] = self.filterset
         return context
+
+
+class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
+    """View class for the page with the key information about a worker."""
+    model = Project
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project_id = context.get("project").id
+        context["participants"] = get_user_model().objects.filter(all_projects=project_id).select_related("position")
+        return context
