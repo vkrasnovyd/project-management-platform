@@ -72,12 +72,19 @@ class GroupedModelMultipleChoiceField(ModelMultipleChoiceField):
 
 
 class ProjectForm(forms.ModelForm):
-    assignees = GroupedModelMultipleChoiceField(
-        queryset=get_user_model().objects.all().select_related("position"),
-        choices_groupby="position",
-        widget=forms.CheckboxSelectMultiple,
-    )
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(ProjectForm, self).__init__(*args, **kwargs)
+        self.fields["assignees"].queryset = get_user_model().objects.exclude(id=self.request.user.id).select_related(
+            "position"
+        )
 
     class Meta:
         model = Project
         fields = ["name", "description", "assignees"]
+
+    assignees = GroupedModelMultipleChoiceField(
+        queryset=get_user_model().objects.all(),
+        choices_groupby="position",
+        widget=forms.CheckboxSelectMultiple,
+    )
