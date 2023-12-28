@@ -7,11 +7,17 @@
 {% block content %}
   <h1>
     {% if project.author == user %}
-      {{ project.name}}
+      {{ project.name }}
       <a href="{% url 'task_manager:project-update' pk=project.id %}?next={% url 'task_manager:project-detail' pk=project.id %}" class="btn btn-outline-primary">Change</a>
+
+      {% if can_be_deleted %}
+        <a href="{% url 'task_manager:project-delete' pk=project.id %}?next={% url 'task_manager:project-detail' pk=project.id %}" class="btn btn-outline-danger">Delete</a>
+      {% endif %}
+
     {% endif %}
   </h1>
 
+  <p>Num tasks: {{ num_tasks }}</p>
   {% if project.description %}
     <p>{{ project.description }}</p>
   {% endif %}

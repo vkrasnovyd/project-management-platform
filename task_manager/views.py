@@ -206,6 +206,14 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         project_id = context.get("project").id
         context["participants"] = get_user_model().objects.filter(all_projects=project_id).select_related("position")
+
+        num_tasks = len(Task.objects.filter(project__id=project_id))
+        context["num_tasks"] = num_tasks
+
+        context["can_be_deleted"] = False
+        if num_tasks == 0:
+            context["can_be_deleted"] = True
+
         return context
 
 
@@ -255,3 +263,9 @@ class ProjectUpdateView(LoginRequiredMixin, generic.UpdateView):
 
         return HttpResponseRedirect(reverse("task_manager:project-detail", args=[project.id]))
 
+
+class ProjectDeleteView(LoginRequiredMixin, generic.DeleteView):
+    """View class for the page for deleting project from the DB."""
+
+    model = Project
+    success_url = reverse_lazy("task_manager:project-list")
