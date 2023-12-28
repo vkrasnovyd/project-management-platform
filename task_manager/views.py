@@ -269,3 +269,14 @@ class ProjectDeleteView(LoginRequiredMixin, generic.DeleteView):
 
     model = Project
     success_url = reverse_lazy("task_manager:project-list")
+
+
+@login_required
+def project_toggle_is_active(request, pk):
+    project = Project.objects.get(id=pk)
+    if project.is_active:
+        project.is_active = False
+    else:
+        project.is_active = True
+    project.save()
+    return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
