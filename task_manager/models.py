@@ -58,6 +58,9 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("task_manager:project-detail", kwargs={"pk": self.pk})
+
 
 class Task(models.Model):
     TASK_STATUS_CHOICES = [

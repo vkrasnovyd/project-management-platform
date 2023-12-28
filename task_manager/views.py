@@ -233,3 +233,25 @@ class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
             project.assignees.add(assignee)
         project.assignees.add(author)
         return HttpResponseRedirect(reverse("task_manager:project-detail", args=[project.id]))
+
+
+class ProjectUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """View class for the page for updating a project."""
+    model = Project
+    form_class = ProjectForm
+
+    def get_form_kwargs(self):
+        kwargs = super(ProjectUpdateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
+
+    def form_valid(self, form):
+        project = Project.objects.get(id=self.object.id)
+
+        project.assignees.set([project.author])
+        assignees = form.cleaned_data["assignees"]
+        for assignee in assignees:
+            project.assignees.add(assignee)
+
+        return HttpResponseRedirect(reverse("task_manager:project-detail", args=[project.id]))
+
