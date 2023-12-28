@@ -18,11 +18,11 @@
 
   {% if user.is_staff and not worker == user %}
     {% if worker.is_active %}
-      <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-warning link-to-page">
+      <a href="{% url 'task_manager:worker-toggle-is-active' pk=worker.id %}" class="btn btn-warning link-to-page">
         Deactivate user profile
       </a>
     {% else %}
-      <a href="{% url 'task_manager:toggle-is-active' pk=worker.id %}" class="btn btn-success link-to-page">
+      <a href="{% url 'task_manager:worker-toggle-is-active' pk=worker.id %}" class="btn btn-success link-to-page">
         Re-activate user profile
       </a>
     {% endif %}

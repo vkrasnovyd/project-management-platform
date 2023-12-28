@@ -83,7 +83,7 @@ class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 
 @login_required
-def toggle_is_active(request, pk):
+def worker_toggle_is_active(request, pk):
     user = get_user_model().objects.get(id=pk)
     if user.is_active:
         user.is_active = False
