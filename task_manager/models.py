@@ -75,7 +75,7 @@ class Task(models.Model):
     name = models.CharField(max_length=255)
     project = models.ForeignKey(
         Project,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="tasks"
     )
     is_completed = models.BooleanField(default=False)
