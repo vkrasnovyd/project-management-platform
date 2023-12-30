@@ -13,10 +13,11 @@ WORKER_TOGGLE_IS_ACTIVE_VIEW = "/workers/1/toggle-is-active/"
 class PublicWorkerTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        get_user_model().objects.create(
+        get_user_model().objects.create_user(
+            username="john.doe",
             first_name="John",
             last_name="Doe",
-            password="Test1234"
+            password="C3MhYzYotrurMi"
         )
 
     def test_worker_list_page_requires_login(self):
@@ -43,16 +44,17 @@ class PublicWorkerTest(TestCase):
 class PrivateWorkerTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        get_user_model().objects.create(
+        get_user_model().objects.create_user(
+            username="john.doe",
             first_name="John",
             last_name="Doe",
-            password="Test1234"
+            password="C3MhYzYotrurMi"
         )
 
     def setUp(self) -> None:
-        user = get_user_model().objects.create(
+        user = get_user_model().objects.create_user(
             username="test_user",
-            password="test123user",
+            password="WP9ctvh5yCtwgH",
             first_name="Jane",
             last_name="Smith"
         )

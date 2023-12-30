@@ -18,10 +18,11 @@ class TaskTypeModelTest(TestCase):
 
 class WorkerModelTest(TestCase):
     def test_worker_str(self):
-        worker = get_user_model().objects.create(
+        worker = get_user_model().objects.create_user(
+            username="john.doe",
             first_name="John",
             last_name="Doe",
-            password="Test1234"
+            password="C3MhYzYotrurMi"
         )
         self.assertEqual(
             str(worker),
@@ -31,10 +32,11 @@ class WorkerModelTest(TestCase):
 
 class ProjectModelTest(TestCase):
     def test_project_str(self):
-        worker = get_user_model().objects.create(
+        worker = get_user_model().objects.create_user(
+            username="john.doe",
             first_name="John",
             last_name="Doe",
-            password="Test1234"
+            password="C3MhYzYotrurMi"
         )
         project = Project.objects.create(
             name="NewClient website",
@@ -47,18 +49,18 @@ class TaskModelTest(TestCase):
     def test_task_str(self):
         position1 = Position.objects.create(name="Project manager")
         position2 = Position.objects.create(name="Copywriter")
-        project_manager = get_user_model().objects.create(
+        project_manager = get_user_model().objects.create_user(
             first_name="Jack",
             last_name="Smith",
             username="jack.smith",
-            password="Test1234",
+            password="6NdqA6xsfBCcdG",
             position=position1
         )
-        copywriter = get_user_model().objects.create(
+        copywriter = get_user_model().objects.create_user(
             first_name="John",
             last_name="Doe",
             username="john.doe",
-            password="Test1234",
+            password="C3MhYzYotrurMi",
             position=position2
         )
         task_type = TaskType.objects.create(name="Copywriting")

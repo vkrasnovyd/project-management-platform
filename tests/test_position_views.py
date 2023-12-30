@@ -39,9 +39,9 @@ class PrivatePositionTests(TestCase):
         Position.objects.create(name="QA")
 
     def setUp(self) -> None:
-        user = get_user_model().objects.create(
+        user = get_user_model().objects.create_user(
             username="test_user",
-            password="test123user"
+            password="t8yLKoZty5XQx3"
         )
         self.client.force_login(user)
 
