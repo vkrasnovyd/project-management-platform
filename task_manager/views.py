@@ -280,3 +280,15 @@ def project_toggle_is_active(request, pk):
         project.is_active = True
     project.save()
     return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
+
+
+class TaskListView(LoginRequiredMixin, generic.ListView):
+    """View class for the page with a list of all tasks assigned to the logged-in user."""
+
+    model = Task
+    paginate_by = 15
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset().filter(followers=user).select_related("project", "author", "responsible")
+        return queryset

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - My Tasks</title>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    My tasks
+  </h1>
+
+  {% for task in task_list %}
+    <p class="text-secondary">{{ task.project }}</p>
+
+    <a href="#"
+      {% if task.is_completed %}
+        class="text-secondary"><s>{{ task }}</s>
+      {% else %}
+        ><u>{{ task }}</u>
+      {% endif %}
+    </a>
+
+    <p>
+      <div
+        {% if task.status == "new" %}
+          class="badge badge-pill badge-success"
+        {% elif task.status == "progress" %}
+          class="badge badge-pill badge-info"
+        {% elif task.status == "blocked" %}
+          class="badge badge-pill badge-danger"
+        {% elif task.status == "review" %}
+          class="badge badge-pill badge-warning"
+        {% else %}
+          class="badge badge-pill badge-secondary"
+        {% endif %}
+      >{{ task.status }}</div>
+    </p>
+
+    <p><span class="text-secondary">{{ task.author }}</span> → {{ task.responsible }}</p>
+    <p>Deadline: {{ task.deadline|date }}</p>
+    <hr>
+  {% endfor %}
+
+{% endblock %}
