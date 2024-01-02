@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q, Case, When
+from django.forms import RadioSelect, CheckboxSelectMultiple
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -282,13 +283,43 @@ def project_toggle_is_active(request, pk):
     return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
 
 
+TASK_IS_COMPLETED_CHOICES = (
+    (True, "Completed"),
+    (False, "Active"),
+)
+
+
+class TaskFilterSet(django_filters.FilterSet):
+    is_completed = django_filters.ChoiceFilter(
+        field_name="is_completed",
+        choices=TASK_IS_COMPLETED_CHOICES,
+        widget=RadioSelect,
+        empty_label="All"
+    )
+    task_type = django_filters.AllValuesMultipleFilter(
+        field_name="task_type__name",
+        widget=CheckboxSelectMultiple
+    )
+
+    class Meta:
+        model = Task
+        fields = ["is_completed", "task_type"]
+
+
 class TaskListView(LoginRequiredMixin, generic.ListView):
     """View class for the page with a list of all tasks assigned to the logged-in user."""
 
     model = Task
     paginate_by = 15
+    filterset_class = TaskFilterSet
 
     def get_queryset(self):
         user = self.request.user
-        queryset = super().get_queryset().filter(followers=user).select_related("project", "author", "responsible")
-        return queryset
+        queryset = super().get_queryset().filter(followers=user).select_related("project", "author", "responsible", "task_type")
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.distinct()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["filterset"] = self.filterset
+        return context

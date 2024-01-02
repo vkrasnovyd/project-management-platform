@@ -9,6 +9,11 @@
     My tasks
   </h1>
 
+  <form action="" method="get">
+    {{ filterset.form.as_p }}
+    <input type="submit">
+  </form>
+
   {% for task in task_list %}
     <p class="text-secondary">{{ task.project }}</p>
 
@@ -19,6 +24,7 @@
         ><u>{{ task }}</u>
       {% endif %}
     </a>
+    <span class="badge badge-light">{{ task.task_type }}</span>
 
     <p>
       <div
@@ -37,7 +43,7 @@
     </p>
 
     <p><span class="text-secondary">{{ task.author }}</span> → {{ task.responsible }}</p>
-    <p>Deadline: {{ task.deadline|date }}</p>
+    <p>Due to: {{ task.deadline|date }}</p>
     <hr>
   {% endfor %}
 
