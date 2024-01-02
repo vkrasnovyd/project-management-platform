@@ -17,7 +17,7 @@
   {% for task in task_list %}
     <p class="text-secondary">{{ task.project }}</p>
 
-    <a href="#"
+    <a href="{% url 'task_manager:task-detail' pk=task.id %}"
       {% if task.is_completed %}
         class="text-secondary"><s>{{ task }}</s>
       {% else %}

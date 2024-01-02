@@ -200,7 +200,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
 
 
 class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
-    """View class for the page with the key information about a worker."""
+    """View class for the page with the key information about the project."""
     model = Project
 
     def get_context_data(self, **kwargs):
@@ -322,4 +322,15 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context["filterset"] = self.filterset
+        return context
+
+
+class TaskDetailView(LoginRequiredMixin, generic.DetailView):
+    """View class for the page with the key information about the task."""
+    model = Task
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        task_id = context.get("task").id
+        context["followers"] = get_user_model().objects.filter(followed_tasks=task_id).select_related("position")
         return context

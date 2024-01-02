@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task manager - {{ task.name }}</title>
+{% endblock %}
+
+{% block content %}
+  <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">{{ task.project }}</a>
+  <h1>
+    {{ task.name }}
+  </h1>
+
+  <p>
+    <a href="{% url 'task_manager:worker-detail' pk=task.author.id %}" class="text-secondary">{{ task.author }}</a> →
+    <a href="{% url 'task_manager:worker-detail' pk=task.responsible.id %}" class="text-secondary">{{ task.responsible }}</a>
+  </p>
+
+  <p>
+    <span class="text-secondary">{{ task.created_time|date }}  → {{ task.deadline|date }} {{ task.deadline|time }}</span>
+    <span
+      {% if task.status == "new" %}
+        class="badge badge-pill badge-success"
+      {% elif task.status == "progress" %}
+        class="badge badge-pill badge-info"
+      {% elif task.status == "blocked" %}
+        class="badge badge-pill badge-danger"
+      {% elif task.status == "review" %}
+        class="badge badge-pill badge-warning"
+      {% else %}
+        class="badge badge-pill badge-secondary"
+      {% endif %}
+    >{{ task.status }}</span>
+  </p>
+
+
+  {% if task.description %}
+    <p>{{ task.description }}</p>
+  {% endif %}
+
+  <h2>Followers</h2>
+
+  {% regroup followers by position as regrouped_worker_list %}
+
+  <ul>
+    {% for position in regrouped_worker_list %}
+      <li>
+        {{ position.grouper }}
+        <ul>
+          {% for worker in position.list %}
+            <li>
+              <a href="{% url 'task_manager:worker-detail' pk=worker.id %}">
+                {{ worker.first_name }} {{ worker.last_name }}
+              </a>
+              {% if worker == task.author %}
+                (<u>Author</u>)
+              {% endif %}
+              {% if worker == task.responsible %}
+                (<u>Responsible</u>)
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}
