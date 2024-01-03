@@ -6,8 +6,13 @@
 
 {% block content %}
   <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">{{ task.project }}</a>
+
   <h1>
     {{ task.name }}
+
+    {% if task.author == user %}
+      <a href="{% url 'task_manager:task-update' pk=task.id %}?next={% url 'task_manager:task-detail' pk=task.id %}" class="btn btn-outline-primary">Change</a>
+    {% endif %}
   </h1>
 
   <p>

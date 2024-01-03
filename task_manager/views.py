@@ -371,3 +371,25 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
         task.followers.add(author)
 
         return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
+
+
+class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
+    """View class for the page for updating a task."""
+    model = Task
+    form_class = TaskForm
+
+    def get_form_kwargs(self):
+        project = self.object.project
+        kwargs = super(TaskUpdateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+        kwargs["project"] = project
+        return kwargs
+
+    def form_valid(self, form):
+        task = form.save(commit=False)
+        task.followers.set([task.author])
+        followers = form.cleaned_data["followers"]
+        for follower in followers:
+            task.followers.add(follower)
+        task.save()
+        return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
