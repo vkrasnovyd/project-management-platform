@@ -24,6 +24,7 @@ from task_manager.views import (
     project_toggle_is_active,
     TaskListView,
     TaskDetailView,
+    TaskCreateView,
 )
 
 urlpatterns = [
@@ -58,6 +59,7 @@ urlpatterns = [
     ),
     path("tasks/", TaskListView.as_view(), name="task-list"),
     path("tasks/<int:pk>/", TaskDetailView.as_view(), name="task-detail"),
+    path("projects/<int:pk>/new_task/", TaskCreateView.as_view(), name="task-create"),
 ]
 
 app_name = "task_manager"

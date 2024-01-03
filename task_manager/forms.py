@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
-from task_manager.models import Worker, Position, TaskType, Project
+from task_manager.models import Worker, Position, TaskType, Project, Task
 
 
 class WorkerCreationForm(UserCreationForm):
@@ -73,7 +73,7 @@ class GroupedModelMultipleChoiceField(ModelMultipleChoiceField):
 
 class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
+        self.request = kwargs.pop("request")
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields["assignees"].queryset = get_user_model().objects.exclude(id=self.request.user.id).select_related(
             "position"
@@ -87,4 +87,35 @@ class ProjectForm(forms.ModelForm):
         queryset=get_user_model().objects.all(),
         choices_groupby="position",
         widget=forms.CheckboxSelectMultiple,
+    )
+
+
+class TaskForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.project = kwargs.pop("project")
+        super(TaskForm, self).__init__(*args, **kwargs)
+        parent_project_assignees = get_user_model().objects.filter(all_projects=self.project).select_related("position")
+        self.fields["followers"].queryset = parent_project_assignees
+        self.fields["responsible"].queryset = parent_project_assignees
+
+    class Meta:
+        model = Task
+        fields = ["name", "description", "task_type", "responsible", "deadline", "followers"]
+
+    responsible = forms.ModelChoiceField(
+        queryset=get_user_model().objects.all()
+    )
+    followers = GroupedModelMultipleChoiceField(
+        queryset=get_user_model().objects.all(),
+        choices_groupby="position",
+        widget=forms.CheckboxSelectMultiple
+    )
+    deadline = forms.SplitDateTimeField(
+        widget=forms.SplitDateTimeWidget(
+            date_attrs={"type": "date"},
+            date_format="%Y-%m-%d",
+            time_attrs={"type": "time"},
+            time_format="%H:%M",
+        )
     )

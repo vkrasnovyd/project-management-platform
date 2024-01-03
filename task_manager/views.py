@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm, ProjectForm
+from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm, ProjectForm, TaskForm
 from task_manager.models import Task, Project, Position, TaskType
 
 
@@ -334,3 +334,41 @@ class TaskDetailView(LoginRequiredMixin, generic.DetailView):
         task_id = context.get("task").id
         context["followers"] = get_user_model().objects.filter(followed_tasks=task_id).select_related("position")
         return context
+
+
+class TaskCreateView(LoginRequiredMixin, generic.CreateView):
+    """View class for the page for creating a new task."""
+
+    model = Task
+    form_class = TaskForm
+
+    def get_form_kwargs(self):
+        project = Project.objects.get(pk=self.kwargs["pk"])
+        kwargs = super(TaskCreateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+        kwargs["project"] = project
+        return kwargs
+
+    def form_valid(self, form):
+        author = self.request.user
+        project = Project.objects.get(pk=self.kwargs["pk"])
+
+        form_data = form.cleaned_data
+
+        task = Task.objects.create(
+            name=form_data["name"],
+            description=form_data["description"],
+            deadline=form_data["deadline"],
+            responsible=form_data["responsible"],
+            task_type=form_data["task_type"],
+            author=author,
+            project=project
+        )
+        task.save()
+
+        followers = form_data["followers"]
+        for follower in followers:
+            task.followers.add(follower)
+        task.followers.add(author)
+
+        return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
