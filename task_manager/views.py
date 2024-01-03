@@ -255,13 +255,12 @@ class ProjectUpdateView(LoginRequiredMixin, generic.UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        project = Project.objects.get(id=self.object.id)
-
+        project = form.save(commit=False)
         project.assignees.set([project.author])
         assignees = form.cleaned_data["assignees"]
         for assignee in assignees:
             project.assignees.add(assignee)
-
+        project.save()
         return HttpResponseRedirect(reverse("task_manager:project-detail", args=[project.id]))
 
 
