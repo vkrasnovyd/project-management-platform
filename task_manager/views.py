@@ -9,7 +9,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm, ProjectForm, TaskForm
+from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm, ProjectForm, TaskForm, \
+    TaskStatusUpdateForm
 from task_manager.models import Task, Project, Position, TaskType
 
 
@@ -324,12 +325,16 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class TaskDetailView(LoginRequiredMixin, generic.DetailView):
+class TaskDetailView(LoginRequiredMixin, generic.UpdateView):
     """View class for the page with the key information about the task."""
     model = Task
+    form_class = TaskStatusUpdateForm
+    template_name = "task_manager/task_detail.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(TaskDetailView, self).get_context_data(**kwargs)
+        object = self.get_object()
+        context["object"] = context["task"] = object
         task_id = context.get("task").id
         context["followers"] = get_user_model().objects.filter(followed_tasks=task_id).select_related("position")
         return context

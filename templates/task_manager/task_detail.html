@@ -21,7 +21,10 @@
   </p>
 
   <p>
-    <span class="text-secondary">{{ task.created_time|date }}  → {{ task.deadline|date }} {{ task.deadline|time }}</span>
+    <span class="text-secondary">
+      {{ task.created_time|date }}  → {{ task.deadline|date }} {{ task.deadline|time }}
+    </span>
+
     <span
       {% if task.status == "new" %}
         class="badge badge-pill badge-success"
@@ -35,12 +38,15 @@
         class="badge badge-pill badge-secondary"
       {% endif %}
     >{{ task.status }}</span>
+
+    {% if user == task.author or user == task.responsible %}
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Change status" class="btn btn-primary">
+      </form>
+    {% endif %}
   </p>
-
-
-  {% if task.description %}
-    <p>{{ task.description }}</p>
-  {% endif %}
 
   <h2>Followers</h2>
 

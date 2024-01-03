@@ -119,3 +119,19 @@ class TaskForm(forms.ModelForm):
             time_format="%H:%M",
         )
     )
+
+
+TASK_STATUS_CHOICES = [
+    ("new", "To Do"),
+    ("progress", "In progress"),
+    ("blocked", "Blocked"),
+    ("review", "Under review")
+]
+
+
+class TaskStatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["status"]
+
+    status = forms.ChoiceField(choices=TASK_STATUS_CHOICES)
