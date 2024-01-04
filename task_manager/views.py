@@ -1,4 +1,4 @@
-import django_filters
+from django_filters import FilterSet, BooleanFilter, ChoiceFilter, AllValuesMultipleFilter, views
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -166,8 +166,8 @@ class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("task_manager:task-type-list")
 
 
-class ProjectFilterSet(django_filters.FilterSet):
-    is_active = django_filters.BooleanFilter()
+class ProjectFilterSet(FilterSet):
+    is_active = BooleanFilter()
 
     class Meta:
         model = Project
@@ -283,41 +283,56 @@ def project_toggle_is_active(request, pk):
     return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
 
 
-TASK_IS_COMPLETED_CHOICES = (
-    (True, "Completed"),
-    (False, "Active"),
-)
+class TaskFilterSet(FilterSet):
+    is_completed_choices = (
+        (True, "Completed"),
+        (False, "Active"),
+    )
+    role_choices = (
+        ("author", "Author"),
+        ("responsible", "Responsible")
+    )
 
-
-class TaskFilterSet(django_filters.FilterSet):
-    is_completed = django_filters.ChoiceFilter(
+    is_completed = ChoiceFilter(
         field_name="is_completed",
-        choices=TASK_IS_COMPLETED_CHOICES,
+        choices=is_completed_choices,
         widget=RadioSelect,
         empty_label="All"
     )
-    task_type = django_filters.AllValuesMultipleFilter(
+    task_type = AllValuesMultipleFilter(
         field_name="task_type__name",
         widget=CheckboxSelectMultiple
+    )
+    role = ChoiceFilter(
+        label="Role",
+        choices=role_choices,
+        method="filter_by_role",
+        widget=RadioSelect,
+        empty_label="All"
     )
 
     class Meta:
         model = Task
-        fields = ["is_completed", "task_type"]
+        fields = ["is_completed", "task_type", "role"]
+
+    def filter_by_role(self, queryset, name, value):
+        if self.request is None:
+            return Task.objects.none()
+        user = self.request.user
+        if value == "author":
+            return queryset.filter(author=user)
+        if value == "responsible":
+            return queryset.filter(responsible=user)
+        return queryset
 
 
-class TaskListView(LoginRequiredMixin, generic.ListView):
+class TaskListView(LoginRequiredMixin, views.FilterView):
     """View class for the page with a list of all tasks assigned to the logged-in user."""
 
     model = Task
     paginate_by = 15
     filterset_class = TaskFilterSet
-
-    def get_queryset(self):
-        user = self.request.user
-        queryset = super().get_queryset().filter(followers=user).select_related("project", "author", "responsible", "task_type")
-        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
-        return self.filterset.qs.distinct()
+    template_name = "task_manager/task_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

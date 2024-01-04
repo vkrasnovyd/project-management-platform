@@ -15,7 +15,11 @@
   </form>
 
   {% for task in task_list %}
-    <p class="text-secondary">{{ task.project }}</p>
+    <p>
+      <u><a href="{% url 'task_manager:project-detail' pk=task.project.id %}" class="text-secondary">
+        {{ task.project }}
+      </a></u>
+    </p>
 
     <a href="{% url 'task_manager:task-detail' pk=task.id %}"
       {% if task.is_completed %}
@@ -26,24 +30,22 @@
     </a>
     <span class="badge badge-light">{{ task.task_type }}</span>
 
-    <p>
-      <div
-        {% if task.status == "new" %}
-          class="badge badge-pill badge-success"
-        {% elif task.status == "progress" %}
-          class="badge badge-pill badge-info"
-        {% elif task.status == "blocked" %}
-          class="badge badge-pill badge-danger"
-        {% elif task.status == "review" %}
-          class="badge badge-pill badge-warning"
-        {% else %}
-          class="badge badge-pill badge-secondary"
-        {% endif %}
-      >{{ task.status }}</div>
-    </p>
+    <div
+      {% if task.status == "new" %}
+        class="badge badge-pill badge-success"
+      {% elif task.status == "progress" %}
+        class="badge badge-pill badge-info"
+      {% elif task.status == "blocked" %}
+        class="badge badge-pill badge-danger"
+      {% elif task.status == "review" %}
+        class="badge badge-pill badge-warning"
+      {% else %}
+        class="badge badge-pill badge-secondary"
+      {% endif %}
+    >{{ task.get_status_display }}</div>
 
     <p><span class="text-secondary">{{ task.author }}</span> → {{ task.responsible }}</p>
-    <p>Due to: {{ task.deadline|date }}</p>
+    <p><b>Due to:</b> {{ task.deadline|date }}, {{ task.deadline|time }}</p>
     <hr>
   {% endfor %}
 
