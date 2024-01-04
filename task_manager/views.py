@@ -216,6 +216,8 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
         if num_tasks == 0:
             context["can_be_deleted"] = True
 
+        context["tasks"] = Task.objects.filter(project__id=project_id)
+
         return context
 
 

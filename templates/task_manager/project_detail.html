@@ -64,4 +64,33 @@
     <a href="{% url 'task_manager:task-create' pk=project.id %}?next={% url 'task_manager:project-detail' pk=project.id %}" class="btn btn-outline-primary">+</a>
   </h2>
 
+  {% for task in tasks %}
+    <a href="{% url 'task_manager:task-detail' pk=task.id %}"
+      {% if task.is_completed %}
+        class="text-secondary"><s>{{ task }}</s>
+      {% else %}
+        ><u>{{ task }}</u>
+      {% endif %}
+    </a>
+    <span class="badge badge-light">{{ task.task_type }}</span>
+
+    <div
+      {% if task.status == "new" %}
+        class="badge badge-pill badge-success"
+      {% elif task.status == "progress" %}
+        class="badge badge-pill badge-info"
+      {% elif task.status == "blocked" %}
+        class="badge badge-pill badge-danger"
+      {% elif task.status == "review" %}
+        class="badge badge-pill badge-warning"
+      {% else %}
+        class="badge badge-pill badge-secondary"
+      {% endif %}
+    >{{ task.get_status_display }}</div>
+
+    <p><span class="text-secondary">{{ task.author }}</span> → {{ task.responsible }}</p>
+    <p><b>Due to:</b> {{ task.deadline|date }}, {{ task.deadline|time }}</p>
+    <hr>
+  {% endfor %}
+
 {% endblock %}
