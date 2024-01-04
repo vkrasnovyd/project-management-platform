@@ -333,10 +333,22 @@ class TaskDetailView(LoginRequiredMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(TaskDetailView, self).get_context_data(**kwargs)
+        task = context.get("task")
+        user = self.request.user
+
         object = self.get_object()
         context["object"] = context["task"] = object
-        task_id = context.get("task").id
+
+        task_id = task.id
         context["followers"] = get_user_model().objects.filter(followed_tasks=task_id).select_related("position")
+
+        user_can_activate_task = False
+        if task.author == user and task.is_completed:
+            user_can_activate_task = True
+        if task.responsible == user and task.status == "completed":
+            user_can_activate_task = True
+        context["user_can_activate_task"] = user_can_activate_task
+
         return context
 
 
@@ -398,3 +410,15 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
             task.followers.add(follower)
         task.save()
         return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
+
+
+@login_required
+def task_status_toggle(request, pk, new_status):
+    task = Task.objects.get(id=pk)
+    task.status = new_status
+    if new_status == "canceled" or new_status == "completed":
+        task.is_completed = True
+    else:
+        task.is_completed = False
+    task.save()
+    return HttpResponseRedirect(reverse_lazy("task_manager:task-detail", args=[pk]))

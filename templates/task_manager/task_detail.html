@@ -8,45 +8,65 @@
   <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">{{ task.project }}</a>
 
   <h1>
-    {{ task.name }}
+    {% if task.is_completed %}
+      <s class="text-secondary">{{ task.name }}</s>
+    {% else %}
+      {{ task.name }}
+    {% endif %}
 
-    {% if task.author == user %}
-      <a href="{% url 'task_manager:task-update' pk=task.id %}?next={% url 'task_manager:task-detail' pk=task.id %}" class="btn btn-outline-primary">Change</a>
+    {% if task.is_completed %}
+      {% if user_can_activate_task %}
+        {% if task.author == user %}
+          <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="new" %}" class="btn btn-outline-warning">
+        {% else %}
+          <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="progress" %}" class="btn btn-outline-warning">
+        {% endif %}
+          Re-activate task
+        </a>
+      {% endif %}
+
+    {% else %}
+      {% if task.author == user %}
+        <a href="{% url 'task_manager:task-update' pk=task.id %}?next={% url 'task_manager:task-detail' pk=task.id %}" class="btn btn-outline-primary">
+          Change
+        </a>
+        <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="canceled" %}" class="btn btn-outline-danger">
+          Cancel task
+        </a>
+      {% endif %}
+
+      {% if task.author == user or task.responsible == user %}
+        <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="completed" %}" class="btn btn-outline-success">
+          Complete task
+        </a>
+      {% endif %}
     {% endif %}
   </h1>
 
   <p>
-    <a href="{% url 'task_manager:worker-detail' pk=task.author.id %}" class="text-secondary">{{ task.author }}</a> →
-    <a href="{% url 'task_manager:worker-detail' pk=task.responsible.id %}" class="text-secondary">{{ task.responsible }}</a>
+    <a href="{% url 'task_manager:worker-detail' pk=task.author.id %}" class="text-secondary">
+      {{ task.author }}
+    </a> →
+    <a href="{% url 'task_manager:worker-detail' pk=task.responsible.id %}" class="text-secondary">
+      {{ task.responsible }}
+    </a>
   </p>
 
-  <p>
-    <span class="text-secondary">
-      {{ task.created_time|date }}  → {{ task.deadline|date }} {{ task.deadline|time }}
-    </span>
+  <div class="text-secondary">
+    {{ task.created_time|date }}  → {{ task.deadline|date }} {{ task.deadline|time }}
+  </div>
 
-    <span
-      {% if task.status == "new" %}
-        class="badge badge-pill badge-success"
-      {% elif task.status == "progress" %}
-        class="badge badge-pill badge-info"
-      {% elif task.status == "blocked" %}
-        class="badge badge-pill badge-danger"
-      {% elif task.status == "review" %}
-        class="badge badge-pill badge-warning"
-      {% else %}
-        class="badge badge-pill badge-secondary"
-      {% endif %}
-    >{{ task.status }}</span>
-
-    {% if user == task.author or user == task.responsible %}
+  {% if user == task.author or user == task.responsible %}
+    {% if task.is_completed == False %}
       <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Change status" class="btn btn-primary">
       </form>
     {% endif %}
-  </p>
+  {% else %}
+    <p>Status: {{ task.get_status_display }}</p>
+  {% endif %}
 
   <h2>Followers</h2>
 

@@ -64,7 +64,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     TASK_STATUS_CHOICES = [
-        ("new", "To Do"),
+        ("new", "New"),
         ("progress", "In progress"),
         ("blocked", "Blocked"),
         ("review", "Under review"),
