@@ -336,6 +336,11 @@ class TaskListView(LoginRequiredMixin, views.FilterView):
     filterset_class = TaskFilterSet
     template_name = "task_manager/task_list.html"
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset().filter(followers=user)
+        return queryset
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context["filterset"] = self.filterset
