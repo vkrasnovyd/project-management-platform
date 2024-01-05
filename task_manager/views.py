@@ -205,6 +205,7 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
     model = Project
 
     def get_context_data(self, **kwargs):
+        user = self.request.user
         context = super().get_context_data(**kwargs)
         project_id = context.get("project").id
         context["participants"] = get_user_model().objects.filter(all_projects=project_id).select_related("position")
@@ -216,7 +217,7 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
         if num_tasks == 0:
             context["can_be_deleted"] = True
 
-        context["tasks"] = Task.objects.filter(project__id=project_id)
+        context["tasks"] = Task.objects.filter(project__id=project_id, followers=user)
 
         return context
 
