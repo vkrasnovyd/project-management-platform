@@ -405,10 +405,12 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
         )
         task.save()
 
-        followers = form_data["followers"]
+        responsible = form_data["responsible"]
+        followers = form_data.get("followers", [])
         for follower in followers:
             task.followers.add(follower)
         task.followers.add(author)
+        task.followers.add(responsible)
 
         return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
 

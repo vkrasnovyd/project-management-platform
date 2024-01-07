@@ -109,7 +109,8 @@ class TaskForm(forms.ModelForm):
     followers = GroupedModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         choices_groupby="position",
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
     deadline = forms.SplitDateTimeField(
         widget=forms.SplitDateTimeWidget(
