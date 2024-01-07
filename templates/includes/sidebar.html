@@ -1,15 +1,106 @@
-<ul class="sidebar-nav">
-  {% if user.is_authenticated %}
-    <li>{{ user.first_name }} {{ user.last_name }}</li>
-    <li><a href="{% url 'task_manager:worker-detail' pk=user.id %}">My account</a></li>
-    <li><a href="{% url 'logout' %}">Logout</a></li>
-  {% else %}
-    <li><a href="{% url 'login' %}">Login</a></li>
-  {% endif %}
-  <li><a href="{% url 'task_manager:index' %}">Home page</a></li>
-  <li><a href="{% url 'task_manager:project-list' %}">Projects</a></li>
-  <li><a href="{% url 'task_manager:task-list' %}">Tasks</a></li>
-  <li><a href="{% url 'task_manager:worker-list' %}">Workers</a></li>
-  <li><a href="{% url 'task_manager:position-list' %}">Positions</a></li>
-  <li><a href="{% url 'task_manager:task-type-list' %}">Task types</a></li>
-</ul>
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
+  <div class="sidebar-inner px-4 pt-3">
+    <ul class="nav flex-column pt-3 pt-md-0">
+      {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="dropdown-item d-flex align-items-center" href="{% url 'task_manager:worker-detail' pk=user.id %}">
+            <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path></svg>
+            {{ user }}
+          </a>
+        </li>
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+      <li class="nav-item">
+        <a href="/" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+          <img src="{{ ASSETS_ROOT }}/img/brand/light.svg" height="20" width="20" alt="Volt Logo">
+          </span>
+          <span class="mt-1 ms-1 sidebar-text">Main page</span>
+        </a>
+      </li>
+      <li class="nav-item {% if 'projects' in segment %} active {% endif %}">
+        <a href="{% url 'task_manager:project-list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+          </span>
+          <span class="sidebar-text">Projects</span>
+        </a>
+      </li>
+      <li class="nav-item {% if 'tasks' in segment %} active {% endif %}">
+        <a href="{% url 'task_manager:task-list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v2H7V2ZM5 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm8 4H8a1 1 0 0 1 0-2h5a1 1 0 0 1 0 2Zm0-4H8a1 1 0 0 1 0-2h5a1 1 0 1 1 0 2Z" clip-rule="evenodd"></path></svg>
+          </span>
+          <span class="sidebar-text">Tasks</span>
+        </a>
+      </li>
+      <li class="nav-item {% if 'users' in segment %} active {% endif %}">
+        <a href="{% url 'task_manager:worker-list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M16 0H4a2 2 0 0 0-2 2v1H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v2H1a1 1 0 0 0 0 2h1v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4.5a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM13.929 17H7.071a.5.5 0 0 1-.5-.5 3.935 3.935 0 1 1 7.858 0 .5.5 0 0 1-.5.5Z" clip-rule="evenodd"></path></svg>
+          </span>
+          <span class="sidebar-text">Users</span>
+        </a>
+      </li>
+      <li class="nav-item {% if 'components-' in segment %} active {% endif %}">
+        <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#submenu-components"><span>
+        <span class="sidebar-icon">
+          <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.977.783A1 1 0 0 0 15 0H3a1 1 0 0 0-.977.783L.2 9h4.239a2.99 2.99 0 0 1 2.742 1.8 1.977 1.977 0 0 0 3.638 0A2.99 2.99 0 0 1 13.561 9H17.8L15.977.783ZM6 2h6a1 1 0 1 1 0 2H6a1 1 0 0 1 0-2Zm7 5H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Z"/>
+            <path fill-rule="evenodd" d="M1 18h16a1 1 0 0 0 1-1v-6h-4.439a.99.99 0 0 0-.908.6 3.978 3.978 0 0 1-7.306 0 .99.99 0 0 0-.908-.6H0v6a1 1 0 0 0 1 1Z" clip-rule="evenodd"/>
+          </svg>
+        </span>
+        <span class="sidebar-text">Components</span>
+          </span>
+            <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+          </span>
+        </span>
+        <div class="multi-level collapse {% if 'components-' in segment %} show {% endif %}" role="list"
+          id="submenu-components" aria-expanded="false">
+          <ul class="flex-column nav">
+            <li class="nav-item {% if 'components-task-types' in segment %} active {% endif %}">
+              <a class="nav-link" href="{% url 'task_manager:task-type-list' %}">
+                <span class="sidebar-text">Task types</span>
+              </a>
+            </li>
+            <li class="nav-item {% if 'components-position' in segment %} active {% endif %}">
+              <a class="nav-link" href="{% url 'task_manager:position-list' %}">
+                <span class="sidebar-text">Positions</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+      <li class="nav-item">
+        <a href="{% url 'logout' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs text-danger me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">Logout</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="nav-item">
+        <a href="{% url 'login' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs text-success me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">Login</span>
+        </a>
+      </li>
+    {% endif %}
+      <li>
+        <div class="d-flex align-items-center justify-content-center mb-5">
+          <a target="_blank" href="https://github.com/vkrasnovyd/project-management-platform" class="btn btn-secondary d-flex align-items-center justify-content-center btn-upgrade-pro">
+            <span>Project on Github</span>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
