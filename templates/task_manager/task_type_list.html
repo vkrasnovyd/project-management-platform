@@ -25,7 +25,14 @@
         <td>{{ task_type.id }}</td>
         <td>{{ task_type.name }}</td>
         <td><a href="{% url 'task_manager:task-type-update' pk=task_type.id %}?next={% url 'task_manager:task-type-list' %}" class="btn btn-success">Change</a></td>
-        <td><a href="{% url 'task_manager:task-type-delete' pk=task_type.id %}?next={% url 'task_manager:task-type-list' %}" class="btn btn-danger">Delete</a></td>
+        <td>
+          {% if task_type.id == 1 %}
+            <div class="btn btn-secondary">Delete</div>
+          {% else %}
+            <a href="{% url 'task_manager:task-type-delete' pk=task_type.id %}?next={% url 'task_manager:task-type-list' %}" class="btn btn-danger">Delete</a>
+          {% endif %}
+        </td>
+
       </tr>
     {% endfor %}
   {% endif %}
