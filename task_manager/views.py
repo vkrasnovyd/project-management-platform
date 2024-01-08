@@ -66,7 +66,11 @@ class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
 
     model = get_user_model()
     form_class = WorkerCreationForm
-    template_name = "task_manager/worker_creation_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(WorkerCreateView, self).get_context_data()
+        context["form_object_name"] = "user"
+        return context
 
 
 class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -74,7 +78,11 @@ class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     model = get_user_model()
     form_class = WorkerChangeForm
-    template_name = "task_manager/worker_update_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(WorkerUpdateView, self).get_context_data()
+        context["form_object_name"] = "user"
+        return context
 
 
 class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -113,6 +121,11 @@ class PositionCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = PositionForm
     success_url = reverse_lazy("task_manager:position-list")
 
+    def get_context_data(self, **kwargs):
+        context = super(PositionCreateView, self).get_context_data()
+        context["form_object_name"] = "position"
+        return context
+
 
 class PositionUpdateView(LoginRequiredMixin, generic.UpdateView):
     """View class for the page for updating existing positions."""
@@ -120,6 +133,11 @@ class PositionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Position
     form_class = PositionForm
     success_url = reverse_lazy("task_manager:position-list")
+
+    def get_context_data(self, **kwargs):
+        context = super(PositionUpdateView, self).get_context_data()
+        context["form_object_name"] = "position"
+        return context
 
 
 class PositionDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -148,6 +166,11 @@ class TaskTypeCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = "task_manager/task_type_form.html"
     success_url = reverse_lazy("task_manager:task-type-list")
 
+    def get_context_data(self, **kwargs):
+        context = super(TaskTypeCreateView, self).get_context_data()
+        context["form_object_name"] = "task type"
+        return context
+
 
 class TaskTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
     """View class for the page for updating existing task type."""
@@ -156,6 +179,11 @@ class TaskTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = TaskTypeForm
     template_name = "task_manager/task_type_form.html"
     success_url = reverse_lazy("task_manager:task-type-list")
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskTypeUpdateView, self).get_context_data()
+        context["form_object_name"] = "task type"
+        return context
 
 
 class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -228,6 +256,11 @@ class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
     model = Project
     form_class = ProjectForm
 
+    def get_context_data(self, **kwargs):
+        context = super(ProjectCreateView, self).get_context_data()
+        context["form_object_name"] = "project"
+        return context
+
     def get_form_kwargs(self):
         kwargs = super(ProjectCreateView, self).get_form_kwargs()
         kwargs["request"] = self.request
@@ -252,6 +285,11 @@ class ProjectUpdateView(LoginRequiredMixin, generic.UpdateView):
     """View class for the page for updating a project."""
     model = Project
     form_class = ProjectForm
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectUpdateView, self).get_context_data()
+        context["form_object_name"] = "project"
+        return context
 
     def get_form_kwargs(self):
         kwargs = super(ProjectUpdateView, self).get_form_kwargs()
@@ -381,6 +419,11 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     model = Task
     form_class = TaskForm
 
+    def get_context_data(self, **kwargs):
+        context = super(TaskCreateView, self).get_context_data()
+        context["form_object_name"] = "task"
+        return context
+
     def get_form_kwargs(self):
         project = Project.objects.get(pk=self.kwargs["pk"])
         kwargs = super(TaskCreateView, self).get_form_kwargs()
@@ -419,6 +462,11 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     """View class for the page for updating a task."""
     model = Task
     form_class = TaskForm
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskUpdateView, self).get_context_data()
+        context["form_object_name"] = "task"
+        return context
 
     def get_form_kwargs(self):
         project = self.object.project
