@@ -1,33 +1,69 @@
 {% extends "base.html" %}
 
 {% block title %}
-  <title>Task manager - Workers</title>
+  Workers
 {% endblock %}
 
 {% block content %}
-  <h1>
-    Workers
-    {% if user.is_staff %}
-      <a href="{% url 'task_manager:worker-create' %}?next={% url 'task_manager:worker-list' %}" class="btn btn-outline-primary">+</a>
+  <div class="py-4">
+    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+      <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+        <li class="breadcrumb-item">
+          <a href="/">
+            <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Users</li>
+      </ol>
+    </nav>
+    <div class="mb-3 mb-lg-0">
+      <h1 class="h2">
+        Users
+        {% if user.is_staff %}
+          <a href="{% url 'task_manager:worker-create' %}?next={% url 'task_manager:worker-list' %}" class="btn btn-success">+ New user</a>
+        {% endif %}
+      </h1>
+    </div>
+
+    {% if worker_list %}
+      <div class="card border-0 shadow mb-4">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-centered table-nowrap mb-0 rounded">
+              <thead class="thead-light">
+                <tr>
+                  <th class="border-0 rounded-start">#</th>
+                  <th class="border-0">User</th>
+                  <th class="border-0">Position</th>
+                  {% if user.is_staff %}
+                    <th class="border-0">Is stuff</th>
+                    <th class="border-0">Status</th>
+                  {% endif %}
+                  <th class="border-0">Link to profile</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for worker in worker_list %}
+                  <tr>
+                    <td>{{ worker.id }}</td>
+                    <td>{{ worker }}</td>
+                    <td>{{ worker.position }}</td>
+                    {% if user.is_staff %}
+                      <td {% if worker.is_staff %}class="text-success" {% else %}class="text-danger"{% endif %}>
+                        {{ worker.is_staff }}
+                      </td>
+                      <td {% if worker.is_active %}class="text-success" {% else %}class="text-danger"{% endif %}>
+                        {{ worker.is_active }}
+                      </td>
+                    <td><a href="{% url 'task_manager:worker-detail' pk=worker.id %}" class="btn btn-tertiary">View profile</a></td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     {% endif %}
-  </h1>
-
-  {% regroup worker_list by position as regrouped_worker_list %}
-
-  <ul>
-  {% for item in regrouped_worker_list %}
-      <li>{{ item.grouper }}
-      <ul>
-        {% for worker in item.list %}
-          <li>
-            <a href="{% url 'task_manager:worker-detail' pk=worker.id %}">
-              {{ worker.first_name }} {{ worker.last_name }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-      </li>
-  {% endfor %}
-  </ul>
-
+  </div>
 {% endblock %}

@@ -26,7 +26,7 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
 
     model = get_user_model()
     paginate_by = 20
-    queryset = get_user_model().objects.select_related("position").all().filter(is_active=True)
+    queryset = get_user_model().objects.select_related("position").all()
 
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
