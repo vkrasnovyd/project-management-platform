@@ -1,16 +1,15 @@
-{% extends "base.html" %}
+{% extends "confirm_delete.html" %}
 
 {% block title %}
-  <title>Task manager - Delete '{{ worker }}'</title>
+  Delete '{{ worker }}'
 {% endblock %}
 
-{% block content %}
-  <h1>Delete user?</h1>
-  <p>Are you sure that you want to delete user '{{ worker }}' from the database?</p>
-  <form action="" method="post">
-    {% csrf_token %}
+{% block delete_confirmation_breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'task_manager:worker-list' %}">Users</a></li>
+  <li class="breadcrumb-item"><a href="{{ request.GET.next }}">{{ worker }}</a></li>
+{% endblock %}
 
-    <input type="submit" value="Yes" class="btn btn-danger">
-    <a href="{{ request.GET.next }}" class="btn btn-light">Cancel</a>
-  </form>
+{% block delete_confirmation_content %}
+  <h1 class="h4">Delete user?</h1>
+  <p class="mb-0">Are you sure that you want to delete user '{{ worker }}' from the database?</p>
 {% endblock %}
