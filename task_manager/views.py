@@ -336,6 +336,7 @@ class TaskFilterSet(FilterSet):
 
     is_completed = ChoiceFilter(
         field_name="is_completed",
+        label="Task status",
         choices=is_completed_choices,
         widget=RadioSelect,
         empty_label="All"
@@ -345,7 +346,7 @@ class TaskFilterSet(FilterSet):
         widget=CheckboxSelectMultiple
     )
     role = ChoiceFilter(
-        label="Role",
+        label="My role",
         choices=role_choices,
         method="filter_by_role",
         widget=RadioSelect,
