@@ -1,19 +1,35 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block title %}
-  <title>Task manager - {{ task.name }}</title>
+  {{ task.name }}
 {% endblock %}
 
 {% block content %}
-  <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">{{ task.project }}</a>
-
-  <h1>
+  <div class="py-4">
+    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+      <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+        <li class="breadcrumb-item">
+          <a href="/">
+            <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          </a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'task_manager:project-list' %}">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">{{ task.project }}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ task }}</li>
+      </ol>
+    </nav>
     {% if task.is_completed %}
-      <s class="text-secondary">{{ task.name }}</s>
+      <h1 class="h2 mb-2 line-through text-gray-500">{{ task.name }} (Completed)</h1>
     {% else %}
-      {{ task.name }}
+      <h1 class="h2 mb-2">{{ task.name }}</h1>
     {% endif %}
 
+    <!--Actions-->
     {% if task.is_completed %}
       {% if user_can_activate_task %}
         {% if task.author == user %}
@@ -24,75 +40,76 @@
           Re-activate task
         </a>
       {% endif %}
-
     {% else %}
       {% if task.author == user %}
-        <a href="{% url 'task_manager:task-update' pk=task.id %}?next={% url 'task_manager:task-detail' pk=task.id %}" class="btn btn-outline-primary">
+        <a href="{% url 'task_manager:task-update' pk=task.id %}?next={% url 'task_manager:task-detail' pk=task.id %}" class="btn btn-tertiary">
           Change
         </a>
-        <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="canceled" %}" class="btn btn-outline-danger">
+        <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="canceled" %}" class="btn btn-warning">
           Cancel task
         </a>
       {% endif %}
-
       {% if task.author == user or task.responsible == user %}
-        <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="completed" %}" class="btn btn-outline-success">
+        <a href="{% url 'task_manager:task-status-toggle' pk=task.id new_status="completed" %}" class="btn btn-success">
           Complete task
         </a>
       {% endif %}
     {% endif %}
-  </h1>
+    <!--End of Actions-->
 
-  <p>
-    <a href="{% url 'task_manager:worker-detail' pk=task.author.id %}" class="text-secondary">
-      {{ task.author }}
-    </a> →
-    <a href="{% url 'task_manager:worker-detail' pk=task.responsible.id %}" class="text-secondary">
-      {{ task.responsible }}
-    </a>
-  </p>
-
-  <div class="text-secondary">
-    {{ task.created_time|date }}  → {{ task.deadline|date }} {{ task.deadline|time }}
-  </div>
-
-  {% if user == task.author or user == task.responsible %}
-    {% if task.is_completed == False %}
-      <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Change status" class="btn btn-primary">
-      </form>
+    <div class="my-3">
+      <a href="{% url 'task_manager:worker-detail' pk=task.author.id %}" class="link-info">
+        {{ task.author }}
+      </a> →
+      <a href="{% url 'task_manager:worker-detail' pk=task.responsible.id %}" class="link-info">
+        {{ task.responsible }}
+      </a>
+    </div>
+    <div class="h6 fw-normal text-gray mb-1">
+      <b>Created on:</b> {{ task.created_time|date }}, {{ task.created_time|time }}
+    </div>
+    <div class="h6 fw-normal text-gray mb-1">
+      <b>Due to:</b> {{ task.deadline|date }}, {{ task.deadline|time }}
+    </div>
+    {% if user == task.author or user == task.responsible %}
+      {% if task.is_completed == False %}
+        <div class="my-3 col-12 col-xl-2">
+          <form action="" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Change status" class="btn btn-primary">
+          </form>
+        </div>
+      {% endif %}
+    {% else %}
+      <p>Status: {{ task.get_status_display }}</p>
     {% endif %}
-  {% else %}
-    <p>Status: {{ task.get_status_display }}</p>
-  {% endif %}
 
-  <h2>Followers</h2>
-
-  {% regroup followers by position as regrouped_worker_list %}
-
-  <ul>
-    {% for position in regrouped_worker_list %}
-      <li>
-        {{ position.grouper }}
-        <ul>
-          {% for worker in position.list %}
-            <li>
-              <a href="{% url 'task_manager:worker-detail' pk=worker.id %}">
-                {{ worker.first_name }} {{ worker.last_name }}
-              </a>
-              {% if worker == task.author %}
-                (<u>Author</u>)
-              {% endif %}
-              {% if worker == task.responsible %}
-                (<u>Responsible</u>)
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
-
+    <h2 class="h3">Task description</h2>
+    <p>{{ task.description }}</p>
+    <!--Followers-->
+    <h2 class="h3">Followers</h2>
+    {% regroup followers by position as regrouped_worker_list %}
+    <ul>
+      {% for position in regrouped_worker_list %}
+        <li>
+          {{ position.grouper }}
+          <ul>
+            {% for worker in position.list %}
+              <li>
+                <a href="{% url 'task_manager:worker-detail' pk=worker.id %}"><u>{{ worker }}</u></a>
+                {% if worker == task.author %}
+                  (<u>Author</u>)
+                {% endif %}
+                {% if worker == task.responsible %}
+                  (<u>Responsible</u>)
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+    <!--End of Followers-->
+  </div>
 {% endblock %}
