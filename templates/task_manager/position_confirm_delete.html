@@ -1,15 +1,5 @@
 {% extends "confirm_delete.html" %}
 
-{% block title %}
-  Delete '{{ position.name }}'
-{% endblock %}
-
-{% block delete_confirmation_breadcrumb %}
+{% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'task_manager:position-list' %}">Positions</a></li>
-  <li class="breadcrumb-item">{{ position.name }}</li>
-{% endblock %}
-
-{% block delete_confirmation_content %}
-  <h1 class="h4">Delete position?</h1>
-  <p class="mb-0">Are you sure that you want to delete position '{{ position.name }}' from the database?</p>
 {% endblock %}

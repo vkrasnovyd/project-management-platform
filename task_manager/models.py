@@ -12,6 +12,10 @@ class Position(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def verbose_name(self):
+        return self._meta.verbose_name
+
 
 class TaskType(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -21,6 +25,10 @@ class TaskType(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def verbose_name(self):
+        return self._meta.verbose_name
 
 
 class Worker(AbstractUser):
@@ -33,8 +41,7 @@ class Worker(AbstractUser):
     )
 
     class Meta:
-        verbose_name = "worker"
-        verbose_name_plural = "workers"
+        verbose_name = "user"
         ordering = ["position__name", "first_name", "last_name"]
 
     def __str__(self):
@@ -42,6 +49,10 @@ class Worker(AbstractUser):
 
     def get_absolute_url(self):
         return reverse("task_manager:worker-detail", kwargs={"pk": self.pk})
+
+    @property
+    def verbose_name(self):
+        return self._meta.verbose_name
 
 
 class Project(models.Model):
@@ -60,6 +71,10 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse("task_manager:project-detail", kwargs={"pk": self.pk})
+
+    @property
+    def verbose_name(self):
+        return self._meta.verbose_name
 
 
 class Task(models.Model):

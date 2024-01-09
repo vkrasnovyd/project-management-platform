@@ -1,15 +1,5 @@
 {% extends "confirm_delete.html" %}
 
-{% block title %}
-  Delete '{{ worker }}'
-{% endblock %}
-
-{% block delete_confirmation_breadcrumb %}
+{% block breadcrumb %}
   <li class="breadcrumb-item"><a href="{% url 'task_manager:worker-list' %}">Users</a></li>
-  <li class="breadcrumb-item"><a href="{{ request.GET.next }}">{{ worker }}</a></li>
-{% endblock %}
-
-{% block delete_confirmation_content %}
-  <h1 class="h4">Delete user?</h1>
-  <p class="mb-0">Are you sure that you want to delete user '{{ worker }}' from the database?</p>
 {% endblock %}
