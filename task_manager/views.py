@@ -60,7 +60,7 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
             author=user,
             responsible=responsible,
             is_completed=False
-        ).order_by("deadline")
+        ).order_by("deadline").select_related("author", "responsible")
         context["common_tasks_in_progress"] = common_tasks_in_progress
 
         """
