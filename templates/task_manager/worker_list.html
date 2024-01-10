@@ -52,11 +52,13 @@
                       <td {% if worker.is_staff %}class="text-success" {% else %}class="text-danger"{% endif %}>
                         {{ worker.is_staff }}
                       </td>
-                      <td {% if worker.is_active %}class="text-success" {% else %}class="text-danger"{% endif %}>
-                        {{ worker.is_active }}
-                      </td>
-                    <td><a href="{% url 'task_manager:worker-detail' pk=worker.id %}" class="btn btn-tertiary">View profile</a></td>
+                      {% if worker.is_active %}
+                        <td class="text-success">Active</td>
+                      {% else %}
+                        <td class="text-danger">Deactivated</td>
+                      {% endif %}
                     {% endif %}
+                    <td><a href="{% url 'task_manager:worker-detail' pk=worker.id %}" class="btn btn-tertiary">View profile</a></td>
                   </tr>
                 {% endfor %}
               </tbody>

@@ -35,8 +35,10 @@
                 <th class="border-0 rounded-start">#</th>
                 <th class="border-0">Position</th>
                 <th class="border-0">Number of workers</th>
-                <th class="border-0">Change position</th>
-                <th class="border-0">Delete position</th>
+                {% if user.is_staff %}
+                  <th class="border-0">Change position</th>
+                  <th class="border-0">Delete position</th>
+                {% endif %}
               </tr>
             </thead>
             <tbody>
@@ -45,14 +47,16 @@
                   <td>{{ position.id }}</td>
                   <td>{{ position.name }}</td>
                   <td>{{ position.num_workers }}</td>
-                  <td><a href="{% url 'task_manager:position-update' pk=position.id %}?next={% url 'task_manager:position-list' %}" class="btn btn-tertiary">Change</a></td>
-                  <td>
-                    {% if position.num_workers %}
-                      <div class="btn btn-gray-300">Delete</div>
-                    {% else %}
-                      <a href="{% url 'task_manager:position-delete' pk=position.id %}?next={% url 'task_manager:position-list' %}" class="btn btn-danger">Delete</a>
-                    {% endif %}
-                  </td>
+                  {% if user.is_staff %}
+                    <td><a href="{% url 'task_manager:position-update' pk=position.id %}?next={% url 'task_manager:position-list' %}" class="btn btn-tertiary">Change</a></td>
+                    <td>
+                      {% if position.num_workers %}
+                        <div class="btn btn-gray-300">Delete</div>
+                      {% else %}
+                        <a href="{% url 'task_manager:position-delete' pk=position.id %}?next={% url 'task_manager:position-list' %}" class="btn btn-danger">Delete</a>
+                      {% endif %}
+                    </td>
+                  {% endif %}
                 </tr>
               {% endfor %}
             </tbody>

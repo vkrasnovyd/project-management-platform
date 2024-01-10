@@ -42,7 +42,7 @@
       {% endif %}
     {% endif %}
 
-    {% if can_be_deleted %}
+    {% if user.is_staff and can_be_deleted %}
       <a href="{% url 'task_manager:worker-delete' pk=worker.id %}?next={% url 'task_manager:worker-detail' pk=worker.id %}" class="btn btn-danger">Delete profile</a>
       <p class="text-gray-500 mt-2">
         <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
