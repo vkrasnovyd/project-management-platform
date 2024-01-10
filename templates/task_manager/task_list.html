@@ -85,19 +85,21 @@
           {% else %}
             <div class="card border-bottom py-3">
               <div class="card-body align-items-center py-0">
-                <div class="fw-normal text-gray">There are currently no tasks in this project available for you.</div>
+                <div class="fw-normal text-gray">There are currently no tasks available for you.</div>
               </div>
             </div>
           {% endif %}
         </div>
       </div>
-      <div class="col-12 col-xl-2">
-        <h3 class="h4 mt-3">Filter by:</h3>
-        <form action="" method="get">
-          {{ filterset.form|crispy }}
-          <input type="submit" value="Filter" class="btn btn-tertiary">
-        </form>
-      </div>
+      {% if task_list %}
+        <div class="col-12 col-xl-2">
+          <h3 class="h4 mt-3">Filter by:</h3>
+          <form action="" method="get">
+            {{ filterset.form|crispy }}
+            <input type="submit" value="Filter" class="btn btn-tertiary">
+          </form>
+        </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

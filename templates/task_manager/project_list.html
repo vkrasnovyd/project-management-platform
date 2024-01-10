@@ -21,13 +21,15 @@
       My projects
       <a href="{% url 'task_manager:project-create' %}?next={% url 'task_manager:project-list' %}" class="btn btn-success">+ New project</a>
     </h1>
-    <h3 class="h4 mt-3">Filter by:</h3>
-    <div class="col-12 col-xl-2">
-      <form action="" method="get">
-        {{ filterset.form|crispy }}
-        <input type="submit" value="Filter" class="btn btn-tertiary">
-      </form>
-    </div>
+    {% if project_list %}
+      <h3 class="h4 mt-3">Filter by:</h3>
+      <div class="col-12 col-xl-2">
+        <form action="" method="get">
+          {{ filterset.form|crispy }}
+          <input type="submit" value="Filter" class="btn btn-tertiary">
+        </form>
+      </div>
+    {% endif %}
     <div class="task-wrapper border bg-white shadow-sm rounded mt-3">
       {% if project_list %}
         {% for project in project_list %}
