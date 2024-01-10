@@ -1,3 +1,5 @@
+import datetime
+
 from django_filters import FilterSet, BooleanFilter, ChoiceFilter, AllValuesMultipleFilter, views
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -17,8 +19,24 @@ from task_manager.models import Task, Project, Position, TaskType
 @login_required
 def index(request):
     """View function for the home page of the site."""
+    today_date = datetime.datetime.today().date()
+    user = request.user
 
-    return render(request, "task_manager/index.html")
+    task_list = Task.objects.filter(deadline=today_date, is_completed=False).select_related(
+        "project",
+        "author",
+        "responsible",
+        "task_type"
+    )
+    tasks_to_do = task_list.filter(responsible=user)
+    tasks_created = task_list.filter(author=user)
+
+    context = {
+        "tasks_to_do": tasks_to_do,
+        "tasks_created": tasks_created,
+    }
+
+    return render(request, "task_manager/index.html", context=context)
 
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):

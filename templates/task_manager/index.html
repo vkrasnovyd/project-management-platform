@@ -1,9 +1,159 @@
 {% extends "base.html" %}
 
 {% block title %}
-  <title>Task manager - Main</title>
+  Main
 {% endblock %}
 
 {% block content %}
-  <p>Hi {{ user }}!</p>
+  <p class="h2 mt-4">Hi {{ user.first_name }}!</p>
+
+  {% if not tasks_to_do and not tasks_created %}
+    <p>Great job! You don't have any uncompleted tasks due today.</p>
+  {% else %}
+    <p>You have {{ tasks_to_do.count }} tasks to complete due today.</p>
+    <p>{{ tasks_created.count }} tasks created by you are due today.</p>
+    {% if tasks_to_do %}
+      <h2 class="h3 mt-4 mb-1">Your tasks</h2>
+      <div class="row">
+        <div class="col-12 col-xl">
+          <div class="task-wrapper border bg-white shadow-sm rounded mt-3">
+            {% for task in tasks_to_do %}
+              <div class="card hover-state border-bottom rounded-0 py-3">
+                <div class="card-body align-items-center py-0">
+                  <a href="{% url 'task_manager:task-detail' pk=task.id %}">
+                    <div class="col-11 col-lg-8 px-0 mb-4 mb-md-0">
+                      <div class="mb-2">
+                        <u><small>Project: {{ task.project }}</small></u>
+                        <h3 class="h5 my-2">{{ task.name }}</h3>
+                        <div class="text-gray-600 mb-2">
+                          Author: {{ task.author }}
+                        </div>
+                        <div class="d-block d-sm-flex">
+                          <h4 class="h6 fw-normal text-gray mb-1">
+                            <svg class="icon icon-xs mx-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" clip-rule="evenodd"/>
+                            </svg>
+                            {{ task.deadline|time }}
+                          </h4>
+                          <div class="ms-sm-3">
+                            <span
+                              {% if task.status == "new" %}
+                                class="badge super-badge badge-sm bg-success"
+                              {% elif task.status == "progress" %}
+                                class="badge super-badge badge-sm bg-info"
+                              {% elif task.status == "blocked" %}
+                                class="badge super-badge badge-sm bg-danger"
+                              {% elif task.status == "review" %}
+                                class="badge super-badge badge-sm bg-warning"
+                              {% else %}
+                                class="badge super-badge badge-sm bg-gray-400"
+                              {% endif %}
+                            >{{ task.get_status_display }}</span>
+                            <span class="badge super-badge badge-sm bg-secondary">{{ task.task_type }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if tasks_created %}
+      <h2 class="h3 mt-4 mb-1">Tasks created by you</h2>
+      <div class="row">
+        <div class="col-12 col-xl">
+          <div class="task-wrapper border bg-white shadow-sm rounded mt-3">
+            {% for task in tasks_created %}
+              <div class="card hover-state border-bottom rounded-0 py-3">
+                <div class="card-body align-items-center py-0">
+                  <a href="{% url 'task_manager:task-detail' pk=task.id %}">
+                    <div class="col-11 col-lg-8 px-0 mb-4 mb-md-0">
+                      <div class="mb-2">
+                        <u><small>Project: {{ task.project }}</small></u>
+                        <h3 class="h5 my-2">{{ task.name }}</h3>
+                        <div class="text-gray-600 mb-2">
+                          Responsible: {{ task.responsible }}
+                        </div>
+                        <div class="d-block d-sm-flex">
+                          <h4 class="h6 fw-normal text-gray mb-1">
+                            <svg class="icon icon-xs mx-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" clip-rule="evenodd"/>
+                            </svg>
+                            {{ task.deadline|time }}
+                          </h4>
+                          <div class="ms-sm-3">
+                            <span
+                              {% if task.status == "new" %}
+                                class="badge super-badge badge-sm bg-success"
+                              {% elif task.status == "progress" %}
+                                class="badge super-badge badge-sm bg-info"
+                              {% elif task.status == "blocked" %}
+                                class="badge super-badge badge-sm bg-danger"
+                              {% elif task.status == "review" %}
+                                class="badge super-badge badge-sm bg-warning"
+                              {% else %}
+                                class="badge super-badge badge-sm bg-gray-400"
+                              {% endif %}
+                            >{{ task.get_status_display }}</span>
+                            <span class="badge super-badge badge-sm bg-secondary">{{ task.task_type }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+
+{##}
+{#  {% if not tasks_created_list and not tasks_to_do_list %}#}
+{#    <p>Great job! You don't have any uncompleted tasks.</p>#}
+{##}
+{#  {% else %}#}
+{#    {% if not tasks_created_due_today_list and not tasks_to_do_due_today_list %}#}
+{#      <p>You don't have any tasks due today.</p>#}
+{##}
+{#      {% if tasks_to_do_list %}#}
+{#        <div class="my-4">#}
+{#          <h2 class="h3 my-2">My tasks</h2>#}
+{#          {% for task in tasks_to_do_list %}#}
+{#            {{ task }} due to {{ task.deadline|date }}#}
+{#          {% endfor %}#}
+{#        </div>#}
+{#      {% endif %}#}
+{##}
+{#      {% if tasks_created_list %}#}
+{#        <p>Tasks created by me</p>#}
+{#        {% for task in tasks_created_list %}#}
+{#          {{ task }} due to {{ task.deadline|date }}#}
+{#        {% endfor %}#}
+{#      {% endif %}#}
+{##}
+{#    {% else %}#}
+{#      {% if tasks_to_do_due_today_list %}#}
+{#        <p>My tasks due today</p>#}
+{#        {% for task in tasks_to_do_due_today_list %}#}
+{#          {{ task }} due to {{ task.deadline|time }}#}
+{#        {% endfor %}#}
+{#      {% endif %}#}
+{##}
+{#      {% if tasks_created_due_today_list %}#}
+{#        <p>Tasks created by me due today</p>#}
+{#        {% for task in tasks_created_due_today_list %}#}
+{#          {{ task }} due to {{ task.deadline|time }}#}
+{#        {% endfor %}#}
+{#      {% endif %}#}
+{#    {% endif %}#}
+{##}
+{#  {% endif %}#}
+
 {% endblock %}
