@@ -396,7 +396,12 @@ class TaskListView(LoginRequiredMixin, views.FilterView):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = super().get_queryset().filter(followers=user)
+        queryset = super().get_queryset().filter(followers=user).select_related(
+            "project",
+            "author",
+            "responsible",
+            "task_type"
+        )
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
