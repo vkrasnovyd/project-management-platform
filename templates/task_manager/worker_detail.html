@@ -30,10 +30,6 @@
       <a href="{% url 'task_manager:worker-update' pk=worker.id %}?next={% url 'task_manager:worker-detail' pk=worker.id %}" class="btn btn-tertiary">Change profile</a>
     {% endif %}
 
-    {% if worker == user %}
-      <a href="{% url 'password_change' %}" class="btn btn-secondary">Change password</a>
-    {% endif %}
-
     {% if user.is_staff and not worker == user %}
       {% if worker.is_active %}
         <a href="{% url 'task_manager:worker-toggle-is-active' pk=worker.id %}" class="btn btn-warning link-to-page">
