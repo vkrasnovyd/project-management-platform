@@ -1,6 +1,6 @@
 import datetime
 
-from django_filters import FilterSet, BooleanFilter, ChoiceFilter, AllValuesMultipleFilter, views
+from django_filters import FilterSet, BooleanFilter, ChoiceFilter, AllValuesMultipleFilter, views, MultipleChoiceFilter
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -347,6 +347,10 @@ def project_toggle_is_active(request, pk):
 
 
 class TaskFilterSet(FilterSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters["task_type"].extra["choices"] = self.get_task_type_filter_choices()
+
     is_completed_choices = (
         (True, "Completed"),
         (False, "Active"),
@@ -363,8 +367,8 @@ class TaskFilterSet(FilterSet):
         widget=RadioSelect,
         empty_label="All"
     )
-    task_type = AllValuesMultipleFilter(
-        field_name="task_type__name",
+    task_type = MultipleChoiceFilter(
+        choices=[],
         widget=CheckboxSelectMultiple
     )
     role = ChoiceFilter(
@@ -378,6 +382,10 @@ class TaskFilterSet(FilterSet):
     class Meta:
         model = Task
         fields = ["is_completed", "task_type", "role"]
+
+    def get_task_type_filter_choices(self):
+        task_type_list = TaskType.objects.filter(tasks__followers=self.request.user).values_list("name", flat=True).distinct()
+        return [(task_type, task_type) for task_type in task_type_list]
 
     def filter_by_role(self, queryset, name, value):
         if self.request is None:
