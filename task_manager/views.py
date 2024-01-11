@@ -55,13 +55,19 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(WorkerDetailView, self).get_context_data()
         user = self.request.user
-        responsible = context.get("worker")
-        common_tasks_in_progress = Task.objects.filter(
+        worker = context.get("worker")
+        tasks_worker_is_responsible = Task.objects.filter(
             author=user,
-            responsible=responsible,
+            responsible=worker,
             is_completed=False
         ).order_by("deadline").select_related("author", "responsible")
-        context["common_tasks_in_progress"] = common_tasks_in_progress
+        context["tasks_worker_is_responsible"] = tasks_worker_is_responsible
+        tasks_worker_is_author = Task.objects.filter(
+            author=worker,
+            responsible=user,
+            is_completed=False
+        ).order_by("deadline").select_related("author", "responsible")
+        context["tasks_worker_is_author"] = tasks_worker_is_author
 
         """
         Code below checks dependencies, that can block the possibility to delete user.
@@ -70,9 +76,9 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
 
         context["can_be_deleted"] = False
         if (
-                not Project.objects.all().filter(author=responsible) and
-                not Task.objects.all().filter(author=responsible) and
-                not Task.objects.all().filter(responsible=responsible)
+                not Project.objects.all().filter(author=worker) and
+                not Task.objects.all().filter(author=worker) and
+                not Task.objects.all().filter(responsible=worker)
         ):
             context["can_be_deleted"] = True
 
