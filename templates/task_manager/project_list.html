@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  My Projects
+{% endblock %}
+
+{% block content %}
+  <div class="py-4">
+    <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+      <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+        <li class="breadcrumb-item">
+          <a href="/">
+            <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Projects</li>
+      </ol>
+    </nav>
+    <h1 class="h2">
+      My projects
+      <a href="{% url 'task_manager:project-create' %}?next={% url 'task_manager:project-list' %}" class="btn btn-success">+ New project</a>
+    </h1>
+    {% if project_list %}
+      <h3 class="h4 mt-3">Filter by:</h3>
+      <div class="col-12 col-xl-2">
+        <form action="" method="get">
+          {{ filterset.form|crispy }}
+          <input type="submit" value="Filter" class="btn btn-tertiary">
+        </form>
+      </div>
+    {% endif %}
+    <div class="task-wrapper border bg-white shadow-sm rounded mt-3">
+      {% if project_list %}
+        {% for project in project_list %}
+          <div class="card hover-state border-bottom rounded-0 py-3">
+            <div class="card-body align-items-center py-0">
+              <a href="{% url 'task_manager:project-detail' pk=project.id %}">
+                <div class="col-11 col-lg-8 px-0 mb-4 mb-md-0">
+                  <div class="mb-2">
+                    <h3
+                      {% if project.is_active %}
+                        class="h5"
+                      {% else %}
+                        class="h5 text-gray-500 line-through"
+                      {% endif %}
+                    >{{ project }}</h3>
+                    <div class="progress-wrapper">
+                      <div class="progress-info">
+                        <div class="progress-label">
+                          <span class="text-primary">{{ project.num_completed_tasks }} of {{ project.num_tasks }} completed tasks</span>
+                        </div>
+                        <div class="progress-percentage">
+                          <span>{{ project.progress }}%</span>
+                        </div>
+                      </div>
+                      <div class="progress">
+                        <div id="project_progress" class="progress-bar bg-secondary" role="progressbar" style="width: {{ project.progress }}%;" aria-valuenow={{ project.progress }} aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="card border-bottom py-3">
+          <div class="card-body align-items-center py-0">
+            <div class="fw-normal text-gray">You are not assigned to any projects yet.</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

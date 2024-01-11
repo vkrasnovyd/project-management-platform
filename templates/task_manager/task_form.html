@@ -1,0 +1,6 @@
+{% extends "simple_form.html" %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'task_manager:project-list' %}">Projects</a></li>
+  <li class="breadcrumb-item"><a href="{{ request.GET.next }}">{{ object.project.name }}</a></li>
+{% endblock %}

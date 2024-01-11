@@ -1,0 +1,14 @@
+asgiref==3.4.1
+beautifulsoup4==4.12.2
+colorama==0.4.5
+Django==3.2.16
+crispy_bootstrap5==2023.10
+django-crispy_forms==2.1
+django-environ==0.8.1
+django_filter==23.5
+gunicorn==20.1.0
+pycodestyle==2.8.0
+pytz==2021.3
+sqlparse==0.4.2
+toml==0.10.2
+whitenoise==5.3.0
