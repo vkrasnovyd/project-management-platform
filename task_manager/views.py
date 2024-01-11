@@ -22,7 +22,7 @@ def index(request):
     today_date = datetime.datetime.today().date()
     user = request.user
 
-    task_list = Task.objects.filter(deadline=today_date, is_completed=False).select_related(
+    task_list = Task.objects.filter(deadline__date=today_date, is_completed=False).select_related(
         "project",
         "author",
         "responsible",
