@@ -1,15 +1,15 @@
 import datetime
 
-from django_filters import FilterSet, BooleanFilter, ChoiceFilter, AllValuesMultipleFilter, views, MultipleChoiceFilter
+from django_filters import FilterSet, BooleanFilter, ChoiceFilter, views, MultipleChoiceFilter
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, F, Q, Case, When
 from django.forms import RadioSelect, CheckboxSelectMultiple
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views import generic
+from django.views import generic, View
 
 from task_manager.forms import WorkerCreationForm, WorkerChangeForm, PositionForm, TaskTypeForm, ProjectForm, TaskForm, \
     TaskStatusUpdateForm
@@ -116,15 +116,13 @@ class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("task_manager:worker-list")
 
 
-@login_required
-def worker_toggle_is_active(request, pk):
-    user = get_user_model().objects.get(id=pk)
-    if user.is_active:
-        user.is_active = False
-    else:
-        user.is_active = True
-    user.save()
-    return HttpResponseRedirect(reverse_lazy("task_manager:worker-detail", args=[pk]))
+class WorkerToggleIsActiveView(LoginRequiredMixin, View):
+    @staticmethod
+    def get(request, pk):
+        user = get_object_or_404(get_user_model(), id=pk)
+        user.is_active = not user.is_active
+        user.save()
+        return HttpResponseRedirect(reverse_lazy("task_manager:worker-detail", args=[pk]))
 
 
 class PositionListView(LoginRequiredMixin, generic.ListView):
@@ -341,15 +339,13 @@ class ProjectDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("task_manager:project-list")
 
 
-@login_required
-def project_toggle_is_active(request, pk):
-    project = Project.objects.get(id=pk)
-    if project.is_active:
-        project.is_active = False
-    else:
-        project.is_active = True
-    project.save()
-    return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
+class ProjectToggleIsActiveView(LoginRequiredMixin, View):
+    @staticmethod
+    def get(request, pk):
+        project = get_object_or_404(Project, id=pk)
+        project.is_active = not project.is_active
+        project.save()
+        return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
 
 
 class TaskFilterSet(FilterSet):
@@ -527,13 +523,14 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
         return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
 
 
-@login_required
-def task_status_toggle(request, pk, new_status):
-    task = Task.objects.get(id=pk)
-    task.status = new_status
-    if new_status == "canceled" or new_status == "completed":
-        task.is_completed = True
-    else:
-        task.is_completed = False
-    task.save()
-    return HttpResponseRedirect(reverse_lazy("task_manager:task-detail", args=[pk]))
+class TaskStatusToggleView(LoginRequiredMixin, View):
+    @staticmethod
+    def get(request, pk, new_status):
+        task = get_object_or_404(Task, id=pk)
+        if new_status == "canceled" or new_status == "completed":
+            task.is_completed = True
+        else:
+            task.is_completed = False
+        task.status = new_status
+        task.save()
+        return HttpResponseRedirect(reverse_lazy("task_manager:task-detail", args=[pk]))

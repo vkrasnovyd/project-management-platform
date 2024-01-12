@@ -6,7 +6,7 @@ from task_manager.views import (
     WorkerDetailView,
     WorkerCreateView,
     WorkerUpdateView,
-    worker_toggle_is_active,
+    WorkerToggleIsActiveView,
     WorkerDeleteView,
     PositionListView,
     PositionCreateView,
@@ -21,12 +21,12 @@ from task_manager.views import (
     ProjectCreateView,
     ProjectUpdateView,
     ProjectDeleteView,
-    project_toggle_is_active,
+    ProjectToggleIsActiveView,
     TaskListView,
     TaskDetailView,
     TaskCreateView,
     TaskUpdateView,
-    task_status_toggle
+    TaskStatusToggleView
 )
 
 urlpatterns = [
@@ -37,7 +37,7 @@ urlpatterns = [
     path("workers/<int:pk>/update/", WorkerUpdateView.as_view(), name="worker-update"),
     path(
         "workers/<int:pk>/toggle-is-active/",
-        worker_toggle_is_active,
+        WorkerToggleIsActiveView.as_view(),
         name="worker-toggle-is-active",
     ),
     path("workers/<int:pk>/delete/", WorkerDeleteView.as_view(), name="worker-delete"),
@@ -56,14 +56,14 @@ urlpatterns = [
     path("projects/<int:pk>/delete/", ProjectDeleteView.as_view(), name="project-delete"),
     path(
         "projects/<int:pk>/toggle-is-active/",
-        project_toggle_is_active,
+        ProjectToggleIsActiveView.as_view(),
         name="project-toggle-is-active",
     ),
     path("tasks/", TaskListView.as_view(), name="task-list"),
     path("tasks/<int:pk>/", TaskDetailView.as_view(), name="task-detail"),
     path("projects/<int:pk>/new_task/", TaskCreateView.as_view(), name="task-create"),
     path("tasks/<int:pk>/update/", TaskUpdateView.as_view(), name="task-update"),
-    path("tasks/<int:pk>/status-toggle/<new_status>/", task_status_toggle, name="task-status-toggle")
+    path("tasks/<int:pk>/status-toggle/<new_status>/", TaskStatusToggleView.as_view(), name="task-status-toggle")
 ]
 
 app_name = "task_manager"
