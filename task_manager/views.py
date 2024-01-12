@@ -523,13 +523,14 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
         return HttpResponseRedirect(reverse("task_manager:task-detail", args=[task.id]))
 
 
-@login_required
-def task_status_toggle(request, pk, new_status):
-    task = Task.objects.get(id=pk)
-    task.status = new_status
-    if new_status == "canceled" or new_status == "completed":
-        task.is_completed = True
-    else:
-        task.is_completed = False
-    task.save()
-    return HttpResponseRedirect(reverse_lazy("task_manager:task-detail", args=[pk]))
+class TaskStatusToggleView(LoginRequiredMixin, View):
+    @staticmethod
+    def get(request, pk, new_status):
+        task = get_object_or_404(Task, id=pk)
+        if new_status == "canceled" or new_status == "completed":
+            task.is_completed = True
+        else:
+            task.is_completed = False
+        task.status = new_status
+        task.save()
+        return HttpResponseRedirect(reverse_lazy("task_manager:task-detail", args=[pk]))
