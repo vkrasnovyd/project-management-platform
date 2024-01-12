@@ -339,15 +339,13 @@ class ProjectDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("task_manager:project-list")
 
 
-@login_required
-def project_toggle_is_active(request, pk):
-    project = Project.objects.get(id=pk)
-    if project.is_active:
-        project.is_active = False
-    else:
-        project.is_active = True
-    project.save()
-    return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
+class ProjectToggleIsActiveView(LoginRequiredMixin, View):
+    @staticmethod
+    def get(request, pk):
+        project = get_object_or_404(Project, id=pk)
+        project.is_active = not project.is_active
+        project.save()
+        return HttpResponseRedirect(reverse_lazy("task_manager:project-detail", args=[pk]))
 
 
 class TaskFilterSet(FilterSet):
