@@ -10,9 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
+import django
+from django.utils.encoding import force_str
 
+django.utils.encoding.force_text = force_str
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -49,7 +53,7 @@ INSTALLED_APPS = [
     "django_filters",
     "bootstrap4",
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_bootstrap4",
     "task_manager"
 ]
 
@@ -83,9 +87,9 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 WSGI_APPLICATION = "project_management_platform.wsgi.application"
 
@@ -100,6 +104,8 @@ DATABASES = {
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES.update({"default": db_from_env})
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
