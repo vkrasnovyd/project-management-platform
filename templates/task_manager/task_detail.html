@@ -76,9 +76,7 @@
         <div class="my-3 col-12 col-xl-2">
           <form action="" method="post">
             {% csrf_token %}
-            <div class="mb-3">
-              {{ form|crispy }}
-            </div>
+            {{ form|crispy }}
             <input type="submit" value="Change status" class="btn btn-primary">
           </form>
         </div>
