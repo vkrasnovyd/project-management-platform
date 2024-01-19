@@ -32,7 +32,9 @@
     <h1 class="h2">{{ object|yesno:"Update,Create" }} {{ form_object_name }}</h1>
     <form action="" method="post" class="pt-3" novalidate>
       {% csrf_token %}
-      {{ form|crispy }}
+      <div class="mb-3">
+        {{ form|crispy }}
+      </div>
       <input type="submit" value="Save" class="btn btn-success">
       <a href="{{ request.GET.next }}" class="btn btn-gray-300">Cancel</a>
     </form>
