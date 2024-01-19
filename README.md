@@ -2,6 +2,10 @@
 
 Task management tool for teams. Supports teaming of employees to work together on projects.
 
+## Check it out!
+
+[Project management platform project deployed to Render](https://project-management-platform.onrender.com)
+
 ## Table of Contents
 1. [ Introduction. ](#introduction)
 2. [ Features. ](#features)
@@ -102,6 +106,20 @@ ctrl + C
 - The Django application is accessible at http://localhost:8000/
 - The Admin page can be accessed at http://localhost:8000/admin
 
+* If you wish to explore the application on a deployed server, access it at: https://project-management-platform.onrender.com and use following credentials:
+
+Regular user (only projects and tasks management):
+```
+login: evelyn_ross
+password: 23SaqnTatUJ8X2
+```
+Moderator (+users, positions and task types management):
+```
+login: moderator
+password: pn9iG4fvcqVewf
+```
+
+
 Remember to replace `localhost` with the relevant IP address if you're not accessing these from the same machine where the services are running.
 
 ## Demo
@@ -111,6 +129,7 @@ Remember to replace `localhost` with the relevant IP address if you're not acces
 ![project_detail](images_for_readme/4_project_detail.png)
 ![task_detail](images_for_readme/5_task_detail.png)
 ![tasks_list](images_for_readme/6_tasks_list.png)
+![common_tasks_list](images_for_readme/7_user_detail_tasks.png)
 ![project_create](images_for_readme/4_project_create.png)
 
 User profile: Action buttons are isvisible only for staff members.
