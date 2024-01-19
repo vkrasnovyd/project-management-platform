@@ -68,7 +68,7 @@
       {% endif %}
 
       {% if tasks_worker_is_responsible %}
-        <h2 class="h3 mt-4 ms-2">Your tasks created by {{ worker }}</h2>
+        <h2 class="h3 mt-4 ms-2">Tasks for {{ worker }} created by you</h2>
         <div class="task-wrapper border bg-white shadow-sm rounded mt-3">
           {% for task in tasks_worker_is_responsible %}
             <div class="card hover-state border-bottom rounded-0 py-3">
@@ -115,7 +115,7 @@
       {% endif %}
 
       {% if tasks_worker_is_author %}
-        <h2 class="h3 mt-4 ms-2">Tasks for {{ worker }} created by you</h2>
+        <h2 class="h3 mt-4 ms-2">Your tasks created by {{ worker }}</h2>
         <div class="task-wrapper border bg-white shadow-sm rounded mt-3">
           {% for task in tasks_worker_is_author %}
             <div class="card hover-state border-bottom rounded-0 py-3">
