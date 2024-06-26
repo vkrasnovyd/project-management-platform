@@ -386,8 +386,10 @@ class TaskFilterSet(FilterSet):
         fields = ["is_completed", "task_type", "role"]
 
     def get_task_type_filter_choices(self):
-        task_type_list = TaskType.objects.filter(tasks__followers=self.request.user).values_list("name", flat=True).distinct()
-        return [(task_type, task_type) for task_type in task_type_list]
+        return (
+            TaskType.objects.filter(tasks__followers=self.request.user)
+                            .values_list("id", "name").distinct()
+        )
 
     def filter_by_role(self, queryset, name, value):
         if self.request is None:
